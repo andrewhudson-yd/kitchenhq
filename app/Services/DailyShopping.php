@@ -51,7 +51,11 @@ class DailyShopping
         }
         $checks = DB::table('shopping_checks')->where('household_id', $h->id)->where('week', $week->toDateString())->pluck('checked', 'item_key');
         $groups = ['buy' => [], 'check' => [], 'have' => []];
+        $removed = DB::table('shopping_checks')->where('household_id', $h->id)->where('week', $week->toDateString())->where('removed', true)->pluck('item_key')->all();
         foreach ($needs as $key => $row) {
+            if (in_array(hash('sha256', $key), $removed, true)) {
+                continue;
+            }
             $assessment = SimpleStock::assess($stock, $row['name']);
             if (isset($explicit[$key])) {
                 $assessment = ['action' => 'buy', 'reason' => 'Added from your photo'];

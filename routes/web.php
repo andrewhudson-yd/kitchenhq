@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ShoppingRemovalController;
 use App\Http\Controllers\ShoppingPhotoController;
 use App\Http\Controllers\DailyKitchenController;
 use App\Http\Controllers\KitchenController;
@@ -15,6 +16,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/stock/add', [DailyKitchenController::class, 'addStock'])->name('stock.add');
     Route::post('/stock/{id}/level', [DailyKitchenController::class, 'stock'])->whereNumber('id')->name('stock.level');
+    Route::post('/shopping/remove', [ShoppingRemovalController::class, 'update'])->name('shopping.remove');
     Route::post('/shopping/check', [DailyKitchenController::class, 'check'])->name('shopping.check');
     Route::get('/assistant', [DailyKitchenController::class, 'ai'])->name('ai');
     Route::post('/assistant/settings', [DailyKitchenController::class, 'saveAi'])->middleware('throttle:10,1')->name('ai.settings');

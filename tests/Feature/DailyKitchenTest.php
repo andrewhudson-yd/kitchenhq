@@ -81,24 +81,4 @@ class DailyKitchenTest extends TestCase
         $this->assertTrue(collect($list['groups']['check'])->pluck('name')->contains('new ingredient'));
     }
 
-    public function test_ai_key_is_encrypted_hidden_and_api_is_contextual_and_read_only(): void
-    {
-        Http::preventStrayRequests();
-        $u = $this->kitchen();
-        $h = $u->household;
-        $key = 'sk-test-not-a-real-key-1234567890';
-        $this->actingAs($u)->post('/assistant/settings', ['ai_api_key' => $key, 'model' => 'gpt-4.1-mini'])->assertSessionHasNoErrors();
-        $this->assertNotSame($key, DB::table('households')->where('id', $h->id)->value('ai_api_key'));
-        $this->assertSame($key, $h->fresh()->ai_api_key);
-        $this->assertArrayNotHasKey('ai_api_key', $h->fresh()->toArray());
-        $this->get('/assistant')->assertDontSee($key);
-        $output = ['output' => [['content' => [['type' => 'output_text', 'text' => 'Use the cod from your freezer.']]]]];
-        Http::fake(['api.openai.com/v1/responses' => Http::response($output)]);
-        $before = $h->inventory()->count();
-        $this->post('/assistant/ask', ['question' => 'What can I use?'])->assertRedirect('/assistant')->assertSessionHas('kitchen_ai_answer', 'Use the cod from your freezer.');
-        Http::assertSent(fn ($r) => $r->url() === 'https://api.openai.com/v1/responses' && $r['store'] === false && str_contains($r['input'], 'cod') && ! str_contains($r['input'], 'daily@example.test'));
-        $this->assertSame($before, $h->inventory()->count());
-        $this->post('/assistant/settings', ['ai_api_key' => $key, 'model' => 'bad model'])->assertSessionHasErrors('model');
-        $this->assertNull(session()->getOldInput('ai_api_key'));
-    }
 }

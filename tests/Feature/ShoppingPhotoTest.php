@@ -17,6 +17,12 @@ class ShoppingPhotoTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        config(['services.openai.key' => null]);
+    }
+
     private function user()
     {
         $h = Household::create(['name' => 'Photo kitchen', 'join_code' => bin2hex(random_bytes(32))]);
@@ -58,7 +64,7 @@ class ShoppingPhotoTest extends TestCase
         Storage::fake('local');
         Http::preventStrayRequests();
         $u = $this->user();
-        $u->household->update(['ai_api_key' => 'sk-fake-test-key-not-live-12345']);
+        config(['services.openai.key' => 'sk-fake-test-key-not-live-12345']);
         $this->actingAs($u)->post('/shopping/photo', ['week' => '2026-10-20', 'photo' => $this->photo()]);
         $output = ['output' => [['content' => [['type' => 'output_text', 'text' => '{"items":["Bread","[unclear]"]}']]]]];
         Http::fake(['api.openai.com/v1/responses' => Http::response($output)]);
@@ -78,7 +84,7 @@ class ShoppingPhotoTest extends TestCase
         $this->assertDatabaseCount('shopping_photo_drafts', 0);
         $this->post('/shopping/photo', ['week' => '2026-10-20', 'photo' => $this->photo()]);
         $this->post('/shopping/photo/1/read')->assertSessionHasErrors('photo');
-        $u->household->update(['ai_api_key' => 'sk-fake-test-key-not-live-12345']);
+        config(['services.openai.key' => 'sk-fake-test-key-not-live-12345']);
         Http::fake(['api.openai.com/v1/responses' => Http::response([], 429)]);
         $this->post('/shopping/photo/1/read')->assertSessionHasErrors('photo');
         $this->assertDatabaseCount('shopping_extras', 0);
