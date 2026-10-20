@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "provenance": "Original Kitchen HQ conversation through 2026-10-20",
+  "status": "proposed_not_finalized",
+  "date_start": "2026-10-20",
+  "adult_dinners": [
+    "Tue fish chips mushy peas",
+    "Wed lamb keema naan",
+    "Thu Thai green chicken curry rice",
+    "Fri sausage tomato pasta",
+    "Sat freezer tapas",
+    "Sun roast",
+    "Mon frozen cod potatoes cabbage"
+  ],
+  "noah_dinners": [
+    "Tue chicken pie baby potatoes broccoli",
+    "Wed jacket potato cheese broccoli/peas",
+    "Thu goujons chips broccoli",
+    "Fri sausages waffles broccoli/peas",
+    "Sat dippers chips broccoli/peas",
+    "Sun roast potatoes broccoli/peas",
+    "Mon chicken pie baby potatoes broccoli"
+  ]
+}

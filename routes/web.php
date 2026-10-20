@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ShoppingPhotoController;
+use App\Http\Controllers\DailyKitchenController;
 use App\Http\Controllers\KitchenController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,9 +13,22 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:6,1');
 });
 Route::middleware('auth')->group(function () {
+    Route::post('/stock/add', [DailyKitchenController::class, 'addStock'])->name('stock.add');
+    Route::post('/stock/{id}/level', [DailyKitchenController::class, 'stock'])->whereNumber('id')->name('stock.level');
+    Route::post('/shopping/check', [DailyKitchenController::class, 'check'])->name('shopping.check');
+    Route::get('/assistant', [DailyKitchenController::class, 'ai'])->name('ai');
+    Route::post('/assistant/settings', [DailyKitchenController::class, 'saveAi'])->middleware('throttle:10,1')->name('ai.settings');
+    Route::post('/assistant/ask', [DailyKitchenController::class, 'askAi'])->middleware('throttle:5,1')->name('ai.ask');
+    Route::get('/shopping/photo', [ShoppingPhotoController::class, 'form'])->name('shopping.photo');
+    Route::post('/shopping/photo', [ShoppingPhotoController::class, 'upload'])->middleware('throttle:10,1')->name('shopping.photo.upload');
+    Route::post('/shopping/photo/connection', [ShoppingPhotoController::class, 'connection'])->middleware('throttle:10,1')->name('shopping.photo.connection');
+    Route::get('/shopping/photo/{id}', [ShoppingPhotoController::class, 'review'])->whereNumber('id')->name('shopping.photo.review');
+    Route::get('/shopping/photo/{id}/image', [ShoppingPhotoController::class, 'image'])->whereNumber('id')->name('shopping.photo.image');
+    Route::post('/shopping/photo/{id}/read', [ShoppingPhotoController::class, 'read'])->whereNumber('id')->middleware('throttle:5,1')->name('shopping.photo.read');
+    Route::post('/shopping/photo/{id}/import', [ShoppingPhotoController::class, 'import'])->whereNumber('id')->name('shopping.photo.import');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/', [KitchenController::class, 'dashboard'])->name('dashboard');
-    Route::get('/inventory', [KitchenController::class, 'inventory'])->name('inventory');
+    Route::get('/', fn () => redirect()->route('inventory'))->name('dashboard');
+    Route::get('/inventory', [DailyKitchenController::class, 'inventory'])->name('inventory');
     Route::post('/inventory', [KitchenController::class, 'saveInventory'])->name('inventory.store');
     Route::put('/inventory/{id}', [KitchenController::class, 'saveInventory'])->whereNumber('id')->name('inventory.update');
     Route::post('/locations', [KitchenController::class, 'addLocation'])->name('locations.store');
@@ -29,7 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/recipes', [KitchenController::class, 'saveRecipe'])->name('recipes.store');
     Route::put('/recipes/{id}', [KitchenController::class, 'saveRecipe'])->whereNumber('id')->name('recipes.update');
     Route::post('/kits', [KitchenController::class, 'saveKit'])->name('kits.store');
-    Route::get('/shopping', [KitchenController::class, 'shopping'])->name('shopping');
+    Route::get('/shopping', [DailyKitchenController::class, 'shopping'])->name('shopping');
     Route::get('/family', [KitchenController::class, 'family'])->name('family');
     Route::post('/profiles', [KitchenController::class, 'saveProfile'])->name('profiles.store');
     Route::put('/profiles/{id}', [KitchenController::class, 'saveProfile'])->whereNumber('id')->name('profiles.update');

@@ -1,0 +1,10 @@
+@extends('layout')
+@section('title','Stock')
+@section('content')
+<div class="section-head"><h1>Stock</h1><details><summary>+ Add item</summary><form method="post" action="{{ route('stock.add') }}">@csrf<label>Name<input name="name" required maxlength="150"></label><label>Where?<select name="location_id">@foreach($locations as $location)<option value="{{ $location->id }}">{{ $location->name }}</option>@endforeach</select></label><label>Level<select name="level">@foreach(\App\Services\SimpleStock::LABELS as $value=>$label)<option value="{{ $value }}">{{ $label }}</option>@endforeach</select></label><button class="small">Add</button></form></details></div>
+@foreach($groups as $type=>$label)<section class="card compact-stock" id="{{ $type }}"><h2>{{ $label }} <small>{{ $items->filter(fn($i)=>$i->location->type===$type)->count() }}</small></h2>
+@forelse($items->filter(fn($i)=>$i->location->type===$type) as $item)@php($level=\App\Services\SimpleStock::level($item))
+<div class="stock-row" id="stock-{{ $item->id }}"><strong>{{ ucfirst($item->name) }}</strong><form method="post" action="{{ route('stock.level',$item->id) }}#stock-{{ $item->id }}">@csrf<label class="sr-only" for="level-{{ $item->id }}">Stock level for {{ $item->name }}</label><select id="level-{{ $item->id }}" name="level" required onchange="this.form.requestSubmit()">@if(!$level)<option value="" selected disabled>Choose level</option>@endif @foreach(\App\Services\SimpleStock::LABELS as $value=>$text)<option value="{{ $value }}" @selected($level===$value)>{{ $text }}</option>@endforeach</select><noscript><button class="small">Save</button></noscript><details class="move-stock"><summary>Move</summary><label>Where?<select name="location_id">@foreach($locations as $location)<option value="{{ $location->id }}" @selected($item->storage_location_id===$location->id)>{{ $location->name }}</option>@endforeach</select></label><button class="small">Move item</button></details></form></div>
+@empty<p class="muted">Nothing listed.</p>@endforelse</section>@endforeach
+<p class="hint">Choose a level to save it. Blank levels still need checking.</p>
+@endsection

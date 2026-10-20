@@ -14,5 +14,6 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->dontFlash(['ai_api_key']);
         //
     })->create();

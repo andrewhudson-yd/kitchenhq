@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "provenance": "Original Kitchen HQ conversation through 2026-10-20",
+  "people": [
+    {
+      "id": "user",
+      "name": null,
+      "role": "adult",
+      "confirmed": {
+        "works_from_home": true,
+        "runs_mostly_evenings": true,
+        "wants_gradual_weight_loss_with_running_energy": true,
+        "likes": [
+          "ham rolls",
+          "lettuce",
+          "tomato",
+          "onion",
+          "salad cream"
+        ],
+        "lunches_should_use_freezer": true
+      }
+    },
+    {
+      "id": "jayne",
+      "name": "Jayne",
+      "role": "adult",
+      "confirmed": {
+        "likes": [
+          "carrots",
+          "cabbage",
+          "apples",
+          "peaches"
+        ],
+        "dislikes": [
+          "broccoli",
+          "spicy food",
+          "chicken mince"
+        ]
+      }
+    },
+    {
+      "id": "noah",
+      "name": "Noah",
+      "role": "child",
+      "age": 15,
+      "confirmed": {
+        "likes": [
+          "steak pie",
+          "chicken pie",
+          "baked potatoes",
+          "baby potatoes with pies",
+          "broccoli",
+          "peas",
+          "bananas",
+          "corner yoghurts"
+        ],
+        "dislikes": [
+          "fish and chips",
+          "carrots",
+          "cabbage"
+        ],
+        "lunch": [
+          "submarine rolls",
+          "turkey slices",
+          "crisps",
+          "chocolate bars"
+        ],
+        "dinner_pairings": [
+          "pie + baby potatoes + vegetables",
+          "sausages or goujons + chips or waffles + vegetables"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "provenance": "Original Kitchen HQ conversation through 2026-10-20",
+  "items": [
+    {
+      "name": "Submarine rolls",
+      "purpose": "Noah packed lunches",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Turkey slices",
+      "purpose": "Noah packed lunches",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Crisps",
+      "purpose": "Noah packed lunches",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Chocolate bars",
+      "purpose": "Noah packed lunches",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Corner yoghurts",
+      "purpose": "Noah snacks",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Bananas",
+      "purpose": "Noah fruit",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Apples",
+      "purpose": "Jayne fruit",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Peaches",
+      "purpose": "Jayne fruit",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Ham",
+      "purpose": "User lunches",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Lettuce",
+      "purpose": "User ham salad rolls",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Tomatoes",
+      "purpose": "User ham salad rolls",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Fresh onion",
+      "purpose": "User ham salad rolls",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Salad cream",
+      "purpose": "User ham salad rolls",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Broccoli",
+      "purpose": "Noah dinners",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    },
+    {
+      "name": "Peas",
+      "purpose": "Noah dinners; current stock low",
+      "quantity": null,
+      "provenance": "User requests; quantities not confirmed"
+    }
+  ]
+}

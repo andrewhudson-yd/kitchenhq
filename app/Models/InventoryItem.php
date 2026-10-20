@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InventoryItem extends Model
 {
-    protected $fillable = ['household_id', 'storage_location_id', 'name', 'quantity', 'unit', 'minimum_quantity', 'expires_at', 'notes'];
+    protected $fillable = ['household_id', 'storage_location_id', 'name', 'quantity', 'unit', 'minimum_quantity', 'expires_at', 'notes', 'qualitative_stock'];
 
     protected function casts(): array
     {
@@ -27,7 +27,13 @@ class InventoryItem extends Model
     public function getStockLevelAttribute(): string
     {
         if ($this->quantity === null) {
-            return 'Unverified';
+            return match ($this->qualitative_stock) {
+                'out' => 'Out of stock',
+                'low' => 'Low stock (amount unknown)',
+                'plenty' => 'Plenty (amount unknown)',
+                'present_unknown_amount' => 'Present (amount unknown)',
+                default => 'Unverified',
+            };
         }
         if ($this->quantity <= 0) {
             return 'Out of stock';

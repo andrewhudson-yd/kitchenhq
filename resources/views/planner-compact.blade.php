@@ -1,0 +1,8 @@
+@extends('layout')
+@section('title','Meals')
+@section('content')
+<div class="section-head"><h1>Meals</h1><a href="{{ route('shopping',['week'=>$week->toDateString()]) }}">Shopping →</a></div>
+@include('weekbar',['page'=>'planner'])
+@foreach(range(0,6) as $day)@php($date=$week->addDays($day))<section class="compact-day"><h2>{{ $date->format('D j M') }}</h2>@forelse($meals->filter(fn($m)=>$m->date->toDateString()===$date->toDateString()) as $meal)<div class="compact-meal"><span>{{ $meal->audience }} <small>{{ str_contains($meal->slot,'lunch') ? 'lunch' : 'dinner' }}</small></span><strong>{{ $meal->recipe->name }}</strong></div>@empty<p class="muted">Nothing planned.</p>@endforelse</section>@endforeach
+<details class="card"><summary>Change a meal</summary><form method="post" action="{{ route('meals.store') }}">@csrf<div class="form-grid"><label>Date<input type="date" name="date" value="{{ $week->toDateString() }}" required></label><label>For<select name="audience"><option>Adults</option><option>Noah</option><option>You</option><option>Everyone</option></select></label><label>Meal<select name="slot"><option value="late_dinner">Adult dinner</option><option value="early_dinner">Earlier dinner</option><option value="lunch">Lunch</option><option value="packed_lunch">Packed lunch</option></select></label><label>Servings<input type="number" name="servings" value="2" min="1" max="20" required></label><label class="full">Choose meal<select name="recipe_id">@foreach($recipes as $recipe)<option value="{{ $recipe->id }}">{{ $recipe->name }}</option>@endforeach</select></label></div><button class="small">Save meal</button></form></details>
+@endsection

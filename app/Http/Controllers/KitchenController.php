@@ -26,7 +26,7 @@ class KitchenController extends Controller
     {
         $r->validate(['week' => 'nullable|date_format:Y-m-d']);
 
-        return CarbonImmutable::parse($r->input('week', today()->toDateString()))->startOfWeek();
+        return CarbonImmutable::parse($r->input('week', $this->household($r)->plan_starts_on ?? today()->startOfWeek()->toDateString()));
     }
 
     public function dashboard(Request $r, WeekPlanner $planner)
@@ -129,7 +129,7 @@ class KitchenController extends Controller
         $h = $this->household($r);
         $week = $this->week($r);
 
-        return view('planner', ['h' => $h, 'week' => $week, 'warnings' => $planner->warnings($h, $week), 'recipes' => $h->recipes()->orderBy('name')->get(), 'meals' => $h->meals()->with('recipe')->whereBetween('date', [$week->toDateString(), $week->addDays(6)->toDateString()])->orderBy('slot')->get()]);
+        return view('planner-compact', ['h' => $h, 'week' => $week, 'warnings' => $planner->warnings($h, $week), 'recipes' => $h->recipes()->orderBy('name')->get(), 'meals' => $h->meals()->with('recipe')->whereBetween('date', [$week->toDateString(), $week->addDays(6)->toDateString()])->orderBy('slot')->get()]);
     }
 
     public function generate(Request $r, WeekPlanner $planner)
@@ -154,7 +154,7 @@ class KitchenController extends Controller
             $h->meals()->updateOrCreate($key, $data);
         });
 
-        return redirect()->route('planner', ['week' => CarbonImmutable::parse($data['date'])->startOfWeek()->toDateString()])->with('status', 'Meal planned.');
+        return redirect()->route('planner', ['week' => ($h->plan_starts_on ?? CarbonImmutable::parse($data['date'])->startOfWeek()->toDateString())])->with('status', 'Meal planned.');
     }
 
     public function deleteMeal(Request $r, int $id)
@@ -189,7 +189,7 @@ class KitchenController extends Controller
     public function saveRecipe(Request $r, ?int $id = null)
     {
         $h = $this->household($r);
-        $data = $r->validate(['name' => 'required|string|max:150', 'servings' => 'required|integer|min:1|max:20', 'instructions' => 'nullable|string|max:5000', 'ingredients' => 'nullable|string|max:10000', 'recipe_kit_id' => ['nullable', Rule::exists('recipe_kits', 'id')->where('household_id', $h->id)], 'is_simplycook' => 'nullable|boolean', 'is_roast' => 'nullable|boolean', 'planning_only' => 'nullable|boolean']);
+        $data = $r->validate(['name' => 'required|string|max:150', 'servings' => 'required|integer|min:1|max:20', 'instructions' => 'nullable|string|max:5000', 'ingredients' => 'nullable|string|max:10000', 'shopping_ingredients' => 'nullable|string|max:10000', 'recipe_kit_id' => ['nullable', Rule::exists('recipe_kits', 'id')->where('household_id', $h->id)], 'is_simplycook' => 'nullable|boolean', 'is_roast' => 'nullable|boolean', 'planning_only' => 'nullable|boolean']);
         $ingredients = [];
         foreach (preg_split('/\R/', trim($data['ingredients'] ?? '')) as $line) {
             if (! trim($line)) {
@@ -204,6 +204,11 @@ class KitchenController extends Controller
         if (! $r->boolean('planning_only') && (! $ingredients || ($r->boolean('is_simplycook') && empty($data['recipe_kit_id'])))) {
             throw ValidationException::withMessages(['ingredients' => 'A ready recipe needs ingredients; SimplyCook also needs a linked kit. Otherwise keep it as a planning placeholder.']);
         }
+        $outline = array_values(array_filter(array_map('trim', preg_split('/\R/', $data['shopping_ingredients'] ?? ''))));
+        if (count($outline) > 80 || collect($outline)->contains(fn ($name) => mb_strlen($name) > 150)) {
+            throw ValidationException::withMessages(['shopping_ingredients' => 'Use up to 80 ingredient names, at most 150 characters each.']);
+        }
+        $data['shopping_ingredients'] = count($ingredients) ? null : ($outline ?: null);
         unset($data['ingredients']);
         foreach (['is_simplycook', 'is_roast', 'planning_only'] as $flag) {
             $data[$flag] = $r->boolean($flag);

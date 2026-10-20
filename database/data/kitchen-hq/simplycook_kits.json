@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0",
+  "provenance": "Original Kitchen HQ conversation through 2026-10-20",
+  "reported_physical_total": 31,
+  "reported_unique_total": 27,
+  "count_provenance": "Earlier assistant count accepted by user, not independently reaudited",
+  "named_kits": [
+    {
+      "name": "Veg Gnocchi Bake",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Indian Masala Cauli Chops",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Baja Halloumi Tacos",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Spicy Aubergine Fajitas",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Miso Aubergine Donburi",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Burrito Bowl",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Mexican Spicy Rice",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Thai Green Curry",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Greek Halloumi Gyros",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Teriyaki Donburi",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Jambalaya",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Black Bean Tofu",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Miso Donburi",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Sticky Korean Cauli Drumsticks",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Moroccan Chicken Tagine",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Home-Style Veg Kari",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Keralan Coconut Curry",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Goan Cauliflower Curry",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Moghul Vegetable Korma",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Veg Keema Matar",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Sichuan Dan Dan Noodles",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Spicy Veg Sausage & Leek Pasta",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Chicken & Mushroom Risotto",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    },
+    {
+      "name": "Chicken Parmigiana",
+      "physical_quantity": null,
+      "ingredients": null,
+      "instructions": null,
+      "confidence": "mentioned in assistant descriptions of uploaded photos; card not independently transcribed"
+    }
+  ],
+  "unknown_or_unverified_names": true,
+  "duplicates_not_mapped": true
+}

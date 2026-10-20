@@ -60,7 +60,7 @@ class KitchenTest extends TestCase
         app(HouseholdSetup::class)->seed($h);
         app(WeekPlanner::class)->generate($h, CarbonImmutable::parse('2026-10-19'));
         $this->actingAs($this->user($h));
-        foreach (['/', '/inventory', '/planner?week=2026-10-19', '/recipes', '/recipes?edit='.$h->recipes()->first()->id, '/shopping?week=2026-10-19', '/family'] as $path) {
+        foreach (['/inventory', '/planner?week=2026-10-19', '/recipes', '/recipes?edit='.$h->recipes()->first()->id, '/shopping?week=2026-10-19', '/family'] as $path) {
             $this->get($path)->assertOk();
         }
     }

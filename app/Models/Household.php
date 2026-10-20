@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Household extends Model
 {
-    protected $fillable = ['name', 'join_code'];
+    protected $fillable = ['name', 'join_code', 'plan_starts_on', 'ai_api_key', 'ai_model'];
+
+    protected $hidden = ['ai_api_key', 'join_code'];
 
     protected function casts(): array
     {
-        return [];
+        return ['ai_api_key' => 'encrypted'];
     }
 
     public function users()

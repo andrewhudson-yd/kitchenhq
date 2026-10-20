@@ -1,0 +1,976 @@
+{
+  "schema_version": "1.0",
+  "provenance": "Original Kitchen HQ conversation through 2026-10-20",
+  "items": [
+    {
+      "name": "Chicken breast fillets",
+      "category": "Meat, fish & seafood",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Beef mince",
+      "category": "Meat, fish & seafood",
+      "stock_level": "out",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User explicit subsequent correction",
+      "notes": "Explicitly NO beef mince; overrides earlier 'plenty' grouped beef mince/burgers"
+    },
+    {
+      "name": "Beef burgers",
+      "category": "Meat, fish & seafood",
+      "stock_level": "unknown",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User explicit subsequent correction",
+      "notes": "Burger quantity unverified; do not assume absence"
+    },
+    {
+      "name": "Pork sausages",
+      "category": "Meat, fish & seafood",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Pork sausage meat / other pork",
+      "category": "Meat, fish & seafood",
+      "stock_level": "out",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Frozen king prawns",
+      "category": "Meat, fish & seafood",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Frozen cod fillets",
+      "category": "Meat, fish & seafood",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Garden peas",
+      "category": "Frozen vegetables",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Whole leaf spinach",
+      "category": "Frozen vegetables",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Sliced cabbage",
+      "category": "Frozen vegetables",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Brussels sprouts",
+      "category": "Frozen vegetables",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Sliced red onions",
+      "category": "Frozen vegetables",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Parsnips",
+      "category": "Frozen vegetables",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Microwave pilau rice",
+      "category": "Rice, pasta & grains",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Dry basmati / other rice",
+      "category": "Rice, pasta & grains",
+      "stock_level": "out",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Risotto rice",
+      "category": "Rice, pasta & grains",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Tagliatelle / pasta ribbons",
+      "category": "Rice, pasta & grains",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Farfalle",
+      "category": "Rice, pasta & grains",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Macaroni / short pasta",
+      "category": "Rice, pasta & grains",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Lasagne sheets",
+      "category": "Rice, pasta & grains",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Couscous",
+      "category": "Rice, pasta & grains",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Naan breads / flatbreads",
+      "category": "Bread & bakery",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Bread rolls / buns",
+      "category": "Bread & bakery",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Other sliced bread / bakery",
+      "category": "Bread & bakery",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chopped tomatoes",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Cream of tomato soup",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Baked beans",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Mixed beans in mild chilli sauce",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Other tinned beans / pulses",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Mango chutney",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chopped red chillies",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Pickled gherkins",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Mustard / horseradish",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Other chutneys / condiments",
+      "category": "Tinned & jarred",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Katsu curry sauce",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Thai green curry sauce",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Other jarred curry sauces",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Marie Rose sauce",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chicken gravy granules",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Beef gravy granules",
+      "category": "Sauces & cooking",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Vegetable oil",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Olive oil",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Sunflower cooking spray",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Balsamic vinegar",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Sweet chilli sauce",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Soy sauce",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Tomato ketchup",
+      "category": "Sauces & cooking",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Mayonnaise",
+      "category": "Sauces & cooking",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Salt / sea salt",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Black pepper / peppercorns",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Garlic salt / garlic granules",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Onion salt / onion granules",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Cumin / ground cumin",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Ground coriander",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Paprika",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chilli powder",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Garam masala",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Turmeric",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Cinnamon",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chinese five spice",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Cajun seasoning",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Peri-peri seasoning",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Steak seasoning",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Sumac",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Sesame seeds",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Dried oregano",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Dried rosemary",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Dried thyme",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Whole cloves",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Ground allspice",
+      "category": "Herbs & spices",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Milk",
+      "category": "Chilled",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Butter / spread",
+      "category": "Chilled",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Eggs",
+      "category": "Chilled",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Cheese / grated cheese",
+      "category": "Chilled",
+      "stock_level": "out",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Yoghurt / desserts",
+      "category": "Chilled",
+      "stock_level": "out",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chicken breast fillets (fresh)",
+      "category": "Chilled",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Carrot & coriander soup",
+      "category": "Chilled",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chicken dippers / nuggets",
+      "category": "Frozen convenience",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chicken goujons / quarter pounders",
+      "category": "Frozen convenience",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Chicken pies",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Frozen chips / fries",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Hash browns / potato waffles",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Onion rings",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Vegetable spring rolls",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Duck spring rolls",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Mozzarella sticks",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Halloumi fries",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Frozen ready meals / dumplings",
+      "category": "Frozen convenience",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Frozen berries / fruit",
+      "category": "Frozen convenience",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Breakfast biscuits / granola bars",
+      "category": "Other groceries",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Breakfast cereal",
+      "category": "Other groceries",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Sugar / sweetener",
+      "category": "Other groceries",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Tea",
+      "category": "Other groceries",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Coffee",
+      "category": "Other groceries",
+      "stock_level": "low",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Stock cubes / stock products",
+      "category": "Other groceries",
+      "stock_level": "plenty",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User stock-level inventory; later corrections",
+      "notes": null
+    },
+    {
+      "name": "Baby potatoes",
+      "category": "Fresh potatoes",
+      "stock_level": "present_unknown_amount",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User explicit subsequent correction",
+      "notes": null
+    },
+    {
+      "name": "Regular potatoes",
+      "category": "Fresh potatoes",
+      "stock_level": "present_unknown_amount",
+      "quantity": null,
+      "unit": null,
+      "quantity_verified": false,
+      "provenance": "User explicit subsequent correction",
+      "notes": null
+    }
+  ]
+}

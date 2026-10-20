@@ -1,0 +1,267 @@
+{
+  "total_confirmed": false,
+  "notes": "Background stacks are repeated views. 31 physical / 27 unique is an earlier unverified report. Ingredients and methods not fully transcribed.",
+  "foreground_recipe_count": 30,
+  "photo_batches": {
+    "batch4": "E411430E-F2EB-47D7-A63E-3A664A2BDF4D",
+    "batch3": "0208964C-3FF6-4FC0-A9A3-CE79F965C4B3"
+  },
+  "kits": [
+    {
+      "observed_minimum": 1,
+      "box_name": "Baja California Tacos",
+      "source": "batch3/photo5, batch4/photo1",
+      "quantity": null,
+      "recipes": [
+        "Baja Fish Tacos",
+        "Baja Halloumi Tacos"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Black Bean Stir-Fry",
+      "source": "batch4/photo4",
+      "quantity": null,
+      "recipes": [
+        "Black Bean Tofu"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Bombay Biryani",
+      "source": "batch3/photo6",
+      "quantity": null,
+      "recipes": [
+        "Bombay Vegetable Biryani"
+      ]
+    },
+    {
+      "observed_minimum": 2,
+      "box_name": "Burrito Bowl",
+      "source": "batch4/photo2",
+      "quantity": null,
+      "recipes": [
+        "Burrito Bowl"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Chipotle Grilled Salad",
+      "source": "batch3/photo1",
+      "quantity": null,
+      "recipes": [
+        "Chipotle Grilled Steak Salad"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Gnocchi Bake",
+      "source": "batch4/photo5",
+      "quantity": null,
+      "recipes": [
+        "Veg Gnocchi Bake"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Goan Curry",
+      "source": "batch3/photo5",
+      "quantity": null,
+      "recipes": [
+        "Goan Cauliflower Curry"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Greek Gyros",
+      "source": "batch3/photo3",
+      "quantity": null,
+      "recipes": [
+        "Greek Halloumi Gyros"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Indian Masala Chops",
+      "source": "batch3/photo7",
+      "quantity": null,
+      "recipes": [
+        "Indian Masala Cauli Chops"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Indian Spiced Burgers",
+      "source": "batch3/photo6",
+      "quantity": null,
+      "recipes": [
+        "Indian Spiced Lentil Burger"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Jambalaya",
+      "source": "batch4/photo4",
+      "quantity": null,
+      "recipes": [
+        "Jambalaya"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Jerk BBQ",
+      "source": "batch3/photo4",
+      "quantity": null,
+      "recipes": [
+        "Jerk BBQ Cauli"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Keema Matar",
+      "source": "batch3/photo9",
+      "quantity": null,
+      "recipes": [
+        "Veg Keema Matar"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Keralan Curry",
+      "source": "batch3/photo10",
+      "quantity": null,
+      "recipes": [
+        "Keralan Coconut Curry"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Mexican Spicy Rice",
+      "source": "batch3/photo2",
+      "quantity": null,
+      "recipes": [
+        "Mexican Spicy Rice"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Miso Donburi",
+      "source": "batch4/photo5",
+      "quantity": null,
+      "recipes": [
+        "Miso Aubergine Donburi"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Moghul Korma",
+      "source": "batch3/photo4",
+      "quantity": null,
+      "recipes": [
+        "Moghul Vegetable Korma"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Moroccan Tagine",
+      "source": "batch4/photo1",
+      "quantity": null,
+      "recipes": [
+        "Moroccan Chicken Tagine"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Murgh Kari",
+      "source": "batch4/photo2",
+      "quantity": null,
+      "recipes": [
+        "Home-Style Veg Kari"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Mushroom Risotto",
+      "source": "batch3/photo1",
+      "quantity": null,
+      "recipes": [
+        "Chicken & Mushroom Risotto"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Parmigiana",
+      "source": "batch3/photo7, batch3/photo8",
+      "quantity": null,
+      "recipes": [
+        "Aubergine Parmigiana",
+        "Chicken Parmigiana"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Sichuan Dan Dan Noodles",
+      "source": "batch3/photo8",
+      "quantity": null,
+      "recipes": [
+        "Sichuan Dan Dan Noodles"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Speedy Linguine",
+      "source": "batch3/photo10",
+      "quantity": null,
+      "recipes": [
+        "Speedy Linguine with Courgette"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Spicy Fajitas",
+      "source": "batch4/photo6",
+      "quantity": null,
+      "recipes": [
+        "Spicy Aubergine Fajitas"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Spicy Sausage & Leek Pasta",
+      "source": "batch3/photo9",
+      "quantity": null,
+      "recipes": [
+        "Spicy Veg Sausage & Leek Pasta"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Sticky Korean Drumsticks",
+      "source": "batch4/photo3",
+      "quantity": null,
+      "recipes": [
+        "Sticky Korean Cauli Drumsticks"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Teriyaki Donburi",
+      "source": "batch4/photo6",
+      "quantity": null,
+      "recipes": [
+        "Teriyaki Aubergine Donburi"
+      ]
+    },
+    {
+      "observed_minimum": 1,
+      "box_name": "Thai Green Curry",
+      "source": "batch3/photo3",
+      "quantity": null,
+      "recipes": [
+        "Thai Green Curry"
+      ]
+    }
+  ],
+  "photo_date_unknown": true,
+  "quantities": "Unknown; observed minimum is visual evidence, not an audited current count."
+}

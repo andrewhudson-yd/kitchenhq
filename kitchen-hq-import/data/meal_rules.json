@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "provenance": "Original Kitchen HQ conversation through 2026-10-20",
+  "rules": [
+    {
+      "rule": "Sunday dinner is always a roast.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Two SimplyCook meals per week, preferably Monday–Thursday.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Noah eats earlier and can have a different dinner from the adults.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Serve vegetables with Noah's dinners, particularly broccoli or peas; avoid carrots and cabbage for him.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Jayne likes carrots and cabbage, dislikes broccoli and spicy food.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Use existing freezer stock to free one entire drawer before batch-preparing freezer meals.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "After one drawer is empty, batch-cook two-adult-portion mains and prepare rice, pasta, noodles and other starches fresh when serving.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Use all physical SimplyCook kits eventually, including duplicates.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Vegetarian kits may be converted to meat; no chicken mince.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Use SimplyCook flavour pots rather than purchasing additional spice blends; soften heat with suitable ingredients but retain flavour.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    },
+    {
+      "rule": "Work-from-home lunches should use frozen stock and support evening running and balanced gradual weight loss.",
+      "status": "confirmed",
+      "provenance": "User statements and corrections in this conversation"
+    }
+  ]
+}
