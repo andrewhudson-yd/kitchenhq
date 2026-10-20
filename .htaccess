@@ -1,0 +1,2 @@
+# Protect private files when this folder is inside XAMPP htdocs.
+Require all denied
