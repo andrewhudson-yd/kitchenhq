@@ -34,7 +34,7 @@ class DailyKitchenController extends Controller
     public function inventory(Request $r)
     {
         $h = $this->household($r);
-        $items = $h->inventory()->with('location')->orderBy('name')->get();
+        $items = $h->inventory()->with('location')->orderBy('name')->get()->reject(fn ($item) => SimpleStock::level($item) === 'out');
         return view('inventory-simple', compact('h', 'items') + ['locations' => $h->locations()->get(), 'groups' => ['freezer' => 'Freezer', 'pantry' => 'Cupboard', 'fridge' => 'Fridge']]);
     }
 
