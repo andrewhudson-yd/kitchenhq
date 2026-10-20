@@ -50,6 +50,7 @@ class DailyShopping
             $explicit[SimpleStock::key($extra->name)] = true;
         }
         $checks = DB::table('shopping_checks')->where('household_id', $h->id)->where('week', $week->toDateString())->pluck('checked', 'item_key');
+        $stocked = DB::table('shopping_checks')->where('household_id', $h->id)->where('week', $week->toDateString())->whereNotNull('stocked_at')->pluck('item_key')->all();
         $groups = ['buy' => [], 'check' => [], 'have' => []];
         $removed = DB::table('shopping_checks')->where('household_id', $h->id)->where('week', $week->toDateString())->where('removed', true)->pluck('item_key')->all();
         foreach ($needs as $key => $row) {
@@ -63,6 +64,9 @@ class DailyShopping
             if (str_starts_with($row['name'], 'SimplyCook kit: ')) {
                 $kit = $h->kits()->where('name', substr($row['name'], strlen('SimplyCook kit: ')))->first();
                 $assessment = $kit && $kit->quantity > 0 ? ['action' => 'have', 'reason' => 'Kit count recorded'] : ['action' => 'check', 'reason' => 'Kit label photographed — check usable pots before buying more'];
+            }
+            if (in_array(hash('sha256', $key), $stocked, true)) {
+                $assessment = ['action' => 'have', 'reason' => 'Bought and saved to Stock'];
             }
             $row += $assessment + ['item_key' => hash('sha256', $key), 'checked' => (bool) ($checks[hash('sha256', $key)] ?? false)];
             $row['uses'] = array_values(array_unique($row['uses']));

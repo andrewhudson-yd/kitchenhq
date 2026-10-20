@@ -55,6 +55,9 @@ class DailyKitchenController extends Controller
                 $item->storage_location_id = $data['location_id'];
             }
             $item->save();
+            if (in_array($data['level'], ['low', 'out'], true)) {
+                DB::table('shopping_checks')->where('household_id', $h->id)->where('item_key', hash('sha256', SimpleStock::key($item->name)))->update(['stocked_at' => null, 'checked' => false]);
+            }
         });
         return back()->with('status', 'Stock updated.');
     }
