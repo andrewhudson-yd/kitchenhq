@@ -26,7 +26,7 @@ class KitchenController extends Controller
     {
         $r->validate(['week' => 'nullable|date_format:Y-m-d']);
 
-        return CarbonImmutable::parse($r->input('week', $this->household($r)->plan_starts_on ?? today()->startOfWeek()->toDateString()));
+        return CarbonImmutable::parse($r->input('week', $this->household($r)->currentWeek()->toDateString()));
     }
 
     public function dashboard(Request $r, WeekPlanner $planner)

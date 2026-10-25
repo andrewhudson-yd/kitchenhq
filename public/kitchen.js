@@ -45,8 +45,8 @@
         const previousUrl = location.href;
         const oldScroll = scrollY;
         const opened = detailsState();
-        const focusId = document.activeElement?.id;
-        const row = form?.closest('.stock-row');
+        const focusId = form?.dataset.keepFocus !== undefined ? form.querySelector('input[name=name]')?.id : document.activeElement?.id;
+        const row = form?.closest('.item, .stock-row');
         const rowId = row?.id;
         const rowTop = row?.getBoundingClientRect().top;
         let data;
@@ -128,11 +128,13 @@
                 else scrollTo(0, oldScroll);
                 const focus = focusId && document.getElementById(focusId);
                 if (focus) focus.focus({ preventScroll: true });
+            } else if (form?.dataset.keepFocus !== undefined && focusId && document.getElementById(focusId)) {
+                document.getElementById(focusId).focus({ preventScroll: true });
             } else {
                 scrollTo(0, pop ? (history.state?.scroll ?? 0) : 0);
                 focusMain();
             }
-            if (mutation) toast(notice?.includes('removed') ? 'Removed · Undo below' : 'Saved ✓');
+            if (mutation && notice) toast(notice);
             else live.className = '';
         } catch (error) {
             restoreControls(form);
@@ -177,5 +179,82 @@
             return;
         }
         visit(location.href, { pop: true });
+    });
+
+    // Type-ahead food suggestions. Picking one also selects where it usually lives.
+    const placeNames = { fridge: 'Fridge', freezer: 'Freezer', pantry: 'Cupboard' };
+    let suggest = null;
+    function foods() {
+        try { return JSON.parse(document.getElementById('food-suggestions')?.textContent || '[]'); } catch { return []; }
+    }
+    function closeSuggest() {
+        suggest?.list.remove();
+        suggest?.input.setAttribute('aria-expanded', 'false');
+        suggest = null;
+    }
+    function escapeHtml(text) {
+        return text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    }
+    function choose(input, food) {
+        input.value = food[0];
+        const radio = input.form?.querySelector(`input[name="${input.dataset.placeTarget}"][value="${food[1]}"]`);
+        if (radio) radio.checked = true;
+        closeSuggest();
+        input.focus();
+    }
+    function showSuggest(input) {
+        const term = input.value.trim().toLowerCase();
+        if (!term) return closeSuggest();
+        const all = foods();
+        const starts = all.filter(f => f[0].toLowerCase().startsWith(term));
+        const words = all.filter(f => !starts.includes(f) && f[0].toLowerCase().split(/[\s-]+/).some(w => w.startsWith(term)));
+        const contains = term.length > 2 ? all.filter(f => !starts.includes(f) && !words.includes(f) && f[0].toLowerCase().includes(term)) : [];
+        const matches = [...starts, ...words, ...contains].slice(0, 7);
+        if (!matches.length || (matches.length === 1 && matches[0][0].toLowerCase() === term)) return closeSuggest();
+        if (!suggest || suggest.input !== input) {
+            closeSuggest();
+            const list = document.createElement('ul');
+            list.className = 'suggest';
+            list.id = `${input.id}-suggest`;
+            list.setAttribute('role', 'listbox');
+            input.setAttribute('aria-controls', list.id);
+            input.setAttribute('aria-autocomplete', 'list');
+            input.setAttribute('role', 'combobox');
+            input.closest('.quick-add-row').after(list);
+            suggest = { input, list, matches: [], active: -1 };
+        }
+        suggest.matches = matches;
+        suggest.active = -1;
+        input.setAttribute('aria-expanded', 'true');
+        input.removeAttribute('aria-activedescendant');
+        const at = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'i');
+        suggest.list.innerHTML = matches.map((f, i) => `<li role="option" id="${input.id}-opt-${i}" data-index="${i}" aria-selected="false"><span>${escapeHtml(f[0]).replace(at, '<mark>$1</mark>')}</span><small>${placeNames[f[1]] || ''}</small></li>`).join('');
+    }
+    function highlight(index) {
+        if (!suggest) return;
+        suggest.active = (index + suggest.matches.length) % suggest.matches.length;
+        suggest.list.querySelectorAll('li').forEach((li, i) => li.setAttribute('aria-selected', String(i === suggest.active)));
+        const li = suggest.list.children[suggest.active];
+        li?.scrollIntoView({ block: 'nearest' });
+        suggest.input.setAttribute('aria-activedescendant', li?.id || '');
+    }
+    document.addEventListener('input', event => {
+        if (event.target.matches('[data-food-suggest]')) showSuggest(event.target);
+    });
+    document.addEventListener('keydown', event => {
+        if (!suggest || event.target !== suggest.input) return;
+        if (event.key === 'ArrowDown') { event.preventDefault(); highlight(suggest.active + 1); }
+        else if (event.key === 'ArrowUp') { event.preventDefault(); highlight(suggest.active - 1); }
+        else if (event.key === 'Escape') closeSuggest();
+        else if (event.key === 'Enter' && suggest.active >= 0) { event.preventDefault(); choose(suggest.input, suggest.matches[suggest.active]); }
+    });
+    document.addEventListener('pointerdown', event => {
+        const li = event.target.closest('.suggest li');
+        if (li && suggest) { event.preventDefault(); choose(suggest.input, suggest.matches[Number(li.dataset.index)]); }
+        else if (suggest && !event.target.closest('.quick-add')) closeSuggest();
+    });
+    document.addEventListener('submit', closeSuggest, true);
+    document.addEventListener('focusout', event => {
+        if (suggest && event.target === suggest.input) setTimeout(() => { if (suggest && document.activeElement !== suggest.input) closeSuggest(); }, 150);
     });
 })();

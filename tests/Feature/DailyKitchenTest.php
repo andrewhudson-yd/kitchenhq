@@ -45,8 +45,10 @@ class DailyKitchenTest extends TestCase
         foreach (['/inventory', '/planner', '/shopping', '/assistant'] as $path) {
             $this->get($path)->assertOk();
         }
-        $this->get('/planner')->assertSee('Lamb keema')->assertSee('26 Oct');
-        $this->get('/inventory')->assertSee('Nearly out')->assertDontSee('Low stock threshold');
+        $this->get('/planner?week=2026-10-20')->assertSee('Lamb keema')->assertSee('26 Oct');
+        $this->get('/inventory?place=freezer')->assertSee('Running low')->assertSee("We're out", false)->assertDontSee('Low stock threshold');
+        $this->get('/inventory?place=pantry')->assertSee('Crunchy peanut butter');
+        $this->get('/inventory?place=attic')->assertSessionHasErrors('place');
         $this->get('/')->assertRedirect('/inventory');
         $key = $list['groups']['buy'][0]['item_key'];
         $this->post('/shopping/check', ['week' => '2026-10-20', 'item_key' => $key, 'checked' => 1])->assertSessionHasNoErrors();
@@ -81,4 +83,51 @@ class DailyKitchenTest extends TestCase
         $this->assertTrue(collect($list['groups']['check'])->pluck('name')->contains('new ingredient'));
     }
 
+
+    public function test_kitchen_out_goes_to_the_list_and_got_it_puts_it_back(): void
+    {
+        $u = $this->kitchen();
+        $h = $u->household;
+        $week = $h->currentWeek()->toDateString();
+        $this->actingAs($u)->post('/stock/add', ['name' => 'Oat milk', 'place' => 'fridge'])->assertRedirect('/inventory?place=fridge');
+        $milk = $h->inventory()->where('name', 'Oat milk')->firstOrFail();
+        $this->assertSame('plenty', $milk->qualitative_stock);
+        $this->assertSame('fridge', $milk->location->type);
+        // Adding the same food again updates it instead of making a duplicate.
+        $this->post('/stock/add', ['name' => 'oat milk', 'place' => 'fridge']);
+        $this->assertSame(1, $h->inventory()->whereRaw('lower(name) = ?', ['oat milk'])->count());
+
+        $this->post('/stock/'.$milk->id.'/level', ['level' => 'out'])->assertSessionHas('status', 'Oat milk added to the shopping list.');
+        $this->get('/inventory?place=fridge')->assertDontSee('id="stock-'.$milk->id.'"', false);
+        $this->get('/shopping')->assertSee('Oat milk')->assertSee('Ran out');
+        $buy = collect(app(DailyShopping::class)->forWeek($h, CarbonImmutable::parse($week))['groups']['buy'])->pluck('name');
+        $this->assertTrue($buy->contains('Oat milk'));
+
+        $this->post('/shopping/got', ['week' => $week, 'name' => 'Oat milk', 'got' => 1])->assertSessionHasNoErrors();
+        $this->assertSame('plenty', $milk->fresh()->qualitative_stock);
+        $this->get('/inventory?place=fridge')->assertSee('id="stock-'.$milk->id.'"', false);
+        $list = app(DailyShopping::class)->forWeek($h, CarbonImmutable::parse($week));
+        $this->assertFalse(collect($list['groups']['buy'])->pluck('name')->contains('Oat milk'));
+
+        $this->post('/shopping/got', ['week' => $week, 'name' => 'Oat milk', 'got' => 0]);
+        $this->assertSame('out', $milk->fresh()->qualitative_stock);
+
+        // Things added straight to the list land in their usual place once bought.
+        $this->post('/shopping/add', ['name' => 'Fish fingers'])->assertRedirect('/shopping');
+        $this->get('/shopping')->assertSee('Fish fingers');
+        $this->post('/shopping/got', ['week' => $week, 'name' => 'Fish fingers', 'got' => 1]);
+        $this->assertSame('freezer', $h->inventory()->where('name', 'Fish fingers')->firstOrFail()->location->type);
+
+        $this->delete('/stock/'.$milk->id)->assertSessionHasNoErrors();
+        $this->assertNull($milk->fresh());
+    }
+
+    public function test_food_dictionary_suggests_foods_with_their_usual_place(): void
+    {
+        $this->assertSame('freezer', \App\Support\FoodDictionary::placeFor('fish fingers'));
+        $this->assertSame('fridge', \App\Support\FoodDictionary::placeFor('Milk'));
+        $this->assertSame('pantry', \App\Support\FoodDictionary::placeFor('something unusual'));
+        $this->assertGreaterThan(200, count(\App\Support\FoodDictionary::all()));
+        $this->actingAs($this->kitchen())->get('/inventory')->assertSee('food-suggestions', false)->assertSee('Fish fingers');
+    }
 }

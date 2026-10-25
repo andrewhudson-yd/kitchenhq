@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Services\DailyShopping;
 use App\Services\SimpleStock;
 use App\Services\OpenAiConnection;
+use App\Models\StockMovement;
+use App\Support\Food;
+use App\Support\FoodDictionary;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,21 +32,61 @@ class DailyKitchenController extends Controller
     private function week(Request $r): CarbonImmutable
     {
         $r->validate(['week' => 'nullable|date_format:Y-m-d']);
-        return CarbonImmutable::parse($r->input('week', $this->household($r)->plan_starts_on ?? today()->startOfWeek()->toDateString()));
+        return CarbonImmutable::parse($r->input('week', $this->household($r)->currentWeek()->toDateString()));
     }
 
     public function inventory(Request $r)
     {
         $h = $this->household($r);
+        $r->validate(['place' => ['nullable', Rule::in(array_keys(FoodDictionary::PLACES))]]);
+        $place = $r->input('place', 'fridge');
         $items = $h->inventory()->with('location')->orderBy('name')->get()->reject(fn ($item) => SimpleStock::level($item) === 'out');
-        return view('inventory-simple', compact('h', 'items') + ['locations' => $h->locations()->get(), 'groups' => ['freezer' => 'Freezer', 'pantry' => 'Cupboard', 'fridge' => 'Fridge']]);
+        $counts = $items->countBy(fn ($item) => $item->location->type);
+
+        return view('inventory-simple', compact('h', 'place', 'counts') + [
+            'items' => $items->filter(fn ($item) => $item->location->type === $place)->values(),
+            'locations' => $h->locations()->get(),
+            'suggestions' => $this->suggestions($h),
+        ]);
+    }
+
+    /** Type-ahead foods: the household's own items first, then the starter dictionary. */
+    private function suggestions($h): array
+    {
+        $foods = [];
+        foreach ($h->inventory()->with('location')->get() as $item) {
+            $foods[Food::name($item->name)] ??= [ucfirst($item->name), $item->location->type];
+        }
+        foreach (FoodDictionary::all() as $name => $place) {
+            $foods[Food::name($name)] ??= [$name, $place];
+        }
+
+        return array_values($foods);
+    }
+
+    private function locationFor($h, string $place): int
+    {
+        return ($h->locations()->where('type', $place)->orderBy('id')->first()
+            ?? $h->locations()->create(['name' => FoodDictionary::PLACES[$place], 'type' => $place]))->id;
+    }
+
+    private function restock($h, string $name, string $level = 'plenty', ?string $place = null): void
+    {
+        $key = SimpleStock::key($name);
+        $item = $h->inventory()->lockForUpdate()->get()->first(fn ($i) => SimpleStock::key($i->name) === $key);
+        $location = $place ? $this->locationFor($h, $place) : null;
+        if ($item) {
+            $item->update(['qualitative_stock' => $level, 'quantity' => $level === 'out' ? 0 : null] + ($location ? ['storage_location_id' => $location] : []));
+        } else {
+            $h->inventory()->create(['name' => trim($name), 'storage_location_id' => $location ?? $this->locationFor($h, FoodDictionary::placeFor($name)), 'qualitative_stock' => $level, 'quantity' => $level === 'out' ? 0 : null, 'unit' => 'each']);
+        }
     }
 
     public function stock(Request $r, int $id)
     {
         $h = $this->household($r);
         $data = $r->validate(['level' => ['required', Rule::in(array_keys(SimpleStock::LABELS))], 'location_id' => ['nullable', Rule::exists('storage_locations', 'id')->where('household_id', $h->id)]]);
-        DB::transaction(function () use ($h, $id, $data) {
+        $name = DB::transaction(function () use ($h, $id, $data) {
             $item = $h->inventory()->whereKey($id)->lockForUpdate()->firstOrFail();
             // A qualitative correction invalidates a previous measured count.
             if ($item->quantity !== null && (float) $item->quantity !== 0.0) {
@@ -56,25 +99,60 @@ class DailyKitchenController extends Controller
             }
             $item->save();
             if (in_array($data['level'], ['low', 'out'], true)) {
-                DB::table('shopping_checks')->where('household_id', $h->id)->where('item_key', hash('sha256', SimpleStock::key($item->name)))->update(['stocked_at' => null, 'checked' => false]);
+                DB::table('shopping_checks')->where('household_id', $h->id)->where('item_key', hash('sha256', SimpleStock::key($item->name)))->update(['stocked_at' => null, 'checked' => false, 'removed' => false]);
             }
+
+            return ucfirst($item->name);
         });
-        return back()->with('status', 'Stock updated.');
+
+        return back()->with('status', match ($data['level']) {
+            'out' => $name.' added to the shopping list.',
+            'low' => $name.' is running low — added to the shopping list.',
+            default => ! empty($data['location_id']) ? $name.' moved.' : $name.' updated.',
+        });
     }
 
     public function addStock(Request $r)
     {
         $h = $this->household($r);
-        $data = $r->validate(['name' => 'required|string|max:150', 'level' => ['required', Rule::in(array_keys(SimpleStock::LABELS))], 'location_id' => ['required', Rule::exists('storage_locations', 'id')->where('household_id', $h->id)]]);
-        $h->inventory()->create(['name' => trim($data['name']), 'storage_location_id' => $data['location_id'], 'qualitative_stock' => $data['level'], 'quantity' => $data['level'] === 'out' ? 0 : null, 'unit' => 'each', 'notes' => 'Stock level chosen by user; numeric unit is a form placeholder.']);
-        return back()->with('status', 'Item added.');
+        $data = $r->validate([
+            'name' => 'required|string|max:150',
+            'level' => ['nullable', Rule::in(array_keys(SimpleStock::LABELS))],
+            'place' => ['required_without:location_id', Rule::in(array_keys(FoodDictionary::PLACES))],
+            'location_id' => ['nullable', Rule::exists('storage_locations', 'id')->where('household_id', $h->id)],
+        ]);
+        $level = $data['level'] ?? 'plenty';
+        $place = $data['place'] ?? $h->locations()->findOrFail($data['location_id'])->type;
+        DB::transaction(function () use ($h, $data, $level, $place) {
+            $this->restock($h, $data['name'], $level, $place);
+            if ($level === 'plenty') {
+                DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $h->currentWeek()->toDateString(), 'item_key' => hash('sha256', SimpleStock::key($data['name']))], ['checked' => true, 'stocked_at' => now()]);
+            }
+        });
+
+        return redirect()->route('inventory', ['place' => $place])->with('status', ucfirst(trim($data['name'])).' added to the '.strtolower(FoodDictionary::PLACES[$place]).'.');
+    }
+
+    public function removeStock(Request $r, int $id)
+    {
+        $h = $this->household($r);
+        $item = $h->inventory()->whereKey($id)->firstOrFail();
+        if (StockMovement::where('inventory_item_id', $item->id)->exists() || DB::table('receipt_item_aliases')->where('inventory_item_id', $item->id)->exists()) {
+            // Keep the cooking/receipt history: hide it from the kitchen without adding it to the list.
+            $item->update(['qualitative_stock' => 'out', 'quantity' => 0]);
+            DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $h->currentWeek()->toDateString(), 'item_key' => hash('sha256', SimpleStock::key($item->name))], ['removed' => true]);
+        } else {
+            $item->delete();
+        }
+
+        return back()->with('status', ucfirst($item->name).' removed.');
     }
 
     public function shopping(Request $r, DailyShopping $shopping)
     {
         $h = $this->household($r);
         $week = $this->week($r);
-        return view('shopping-simple', compact('h', 'week') + $shopping->forWeek($h, $week));
+        return view('shopping-simple', compact('h', 'week') + $shopping->forWeek($h, $week) + ['suggestions' => $this->suggestions($h), 'current' => $week->equalTo($h->currentWeek())]);
     }
 
     public function check(Request $r)
@@ -82,6 +160,34 @@ class DailyKitchenController extends Controller
         $data = $r->validate(['week' => 'required|date_format:Y-m-d', 'item_key' => 'required|regex:/^[a-f0-9]{64}$/', 'checked' => 'required|boolean']);
         DB::table('shopping_checks')->updateOrInsert(['household_id' => $this->household($r)->id, 'week' => $data['week'], 'item_key' => $data['item_key']], ['checked' => $data['checked']]);
         return back()->with('status', 'Shopping list saved.');
+    }
+
+    public function addToList(Request $r)
+    {
+        $h = $this->household($r);
+        $data = $r->validate(['name' => 'required|string|max:150']);
+        $week = $h->currentWeek()->toDateString();
+        $key = hash('sha256', SimpleStock::key($data['name']));
+        DB::table('shopping_extras')->updateOrInsert(['household_id' => $h->id, 'week' => $week, 'item_key' => $key], ['name' => trim($data['name']), 'source' => 'manual', 'created_at' => now(), 'updated_at' => now()]);
+        DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $week, 'item_key' => $key], ['checked' => false, 'removed' => false, 'stocked_at' => null]);
+
+        return redirect()->route('shopping')->with('status', ucfirst(trim($data['name'])).' added to the list.');
+    }
+
+    /** Ticking an item off puts it straight back in the kitchen; unticking puts it back on the list. */
+    public function got(Request $r)
+    {
+        $h = $this->household($r);
+        $data = $r->validate(['week' => 'required|date_format:Y-m-d', 'name' => 'required|string|max:150', 'got' => 'required|boolean']);
+        $key = hash('sha256', SimpleStock::key($data['name']));
+        DB::transaction(function () use ($h, $data, $key) {
+            if (! str_starts_with($data['name'], 'SimplyCook kit: ')) {
+                $this->restock($h, $data['name'], $data['got'] ? 'plenty' : 'out');
+            }
+            DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $data['week'], 'item_key' => $key], ['checked' => (bool) $data['got'], 'removed' => false, 'stocked_at' => $data['got'] ? now() : null]);
+        });
+
+        return redirect()->route('shopping', ['week' => $data['week']])->with('status', $data['got'] ? ucfirst($data['name']).' is back in the kitchen.' : ucfirst($data['name']).' is back on the list.');
     }
 
     public function ai(Request $r)

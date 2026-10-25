@@ -46,7 +46,7 @@ class DailyShopping
         $extras = DB::table('shopping_extras')->where('household_id', $h->id)->where('week', $week->toDateString())->get();
         $explicit = [];
         foreach ($extras as $extra) {
-            $add($extra->name, 'From your shopping-list photo');
+            $add($extra->name, $extra->source === 'photo' ? 'From your shopping-list photo' : 'Added by you');
             $explicit[SimpleStock::key($extra->name)] = true;
         }
         $checks = DB::table('shopping_checks')->where('household_id', $h->id)->where('week', $week->toDateString())->pluck('checked', 'item_key');
@@ -59,7 +59,7 @@ class DailyShopping
             }
             $assessment = SimpleStock::assess($stock, $row['name']);
             if (isset($explicit[$key])) {
-                $assessment = ['action' => 'buy', 'reason' => 'Added from your photo'];
+                $assessment = ['action' => 'buy', 'reason' => in_array('Added by you', $row['uses'], true) ? 'Added by you' : 'Added from your photo'];
             }
             if (str_starts_with($row['name'], 'SimplyCook kit: ')) {
                 $kit = $h->kits()->where('name', substr($row['name'], strlen('SimplyCook kit: ')))->first();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 
 class Household extends Model
@@ -13,6 +14,18 @@ class Household extends Model
     protected function casts(): array
     {
         return ['ai_api_key' => 'encrypted'];
+    }
+
+    /** The start of the planning week that contains today, following the household's weekly rhythm. */
+    public function currentWeek(): CarbonImmutable
+    {
+        $today = CarbonImmutable::today();
+        if (! $this->plan_starts_on) {
+            return $today->startOfWeek();
+        }
+        $start = CarbonImmutable::parse($this->plan_starts_on);
+
+        return $start->addDays(intdiv((int) $start->diffInDays($today, false) - ($today < $start ? 6 : 0), 7) * 7);
     }
 
     public function users()

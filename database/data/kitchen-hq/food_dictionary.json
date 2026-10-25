@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "provenance": "Starter list of everyday UK household foods for type-ahead suggestions. Each food has the place it is usually kept.",
+  "fridge": [
+    "Milk", "Semi-skimmed milk", "Whole milk", "Oat milk", "Butter", "Spreadable butter", "Margarine",
+    "Cheddar cheese", "Grated cheese", "Mozzarella", "Halloumi", "Feta", "Parmesan", "Cream cheese", "Cheese slices",
+    "Eggs", "Natural yoghurt", "Greek yoghurt", "Corner yoghurts", "Yoghurts", "Fromage frais", "Double cream", "Single cream", "Sour cream", "Crème fraîche",
+    "Ham", "Turkey slices", "Chicken slices", "Bacon", "Chorizo", "Salami", "Pepperoni",
+    "Chicken breasts", "Chicken thighs", "Whole chicken", "Pork sausages", "Pork chops", "Beef mince", "Lamb mince", "Turkey mince", "Steak",
+    "Salmon fillets", "Smoked salmon", "Prawns", "Tuna steaks",
+    "Lettuce", "Salad leaves", "Spinach", "Rocket", "Cucumber", "Tomatoes", "Cherry tomatoes", "Peppers", "Spring onions", "Celery",
+    "Carrots", "Broccoli", "Cauliflower", "Courgette", "Aubergine", "Mushrooms", "Leeks", "Cabbage", "Green beans", "Sweetcorn on the cob", "Asparagus", "Avocado",
+    "Fresh herbs", "Coriander", "Parsley", "Basil", "Ginger", "Chillies",
+    "Apples", "Grapes", "Strawberries", "Blueberries", "Raspberries", "Oranges", "Satsumas", "Lemons", "Limes", "Melon", "Pineapple",
+    "Hummus", "Coleslaw", "Fresh pasta", "Pesto", "Mayonnaise", "Tomato ketchup", "Salad cream", "Brown sauce", "English mustard", "Horseradish sauce", "Mint sauce", "Mint jelly", "Mango chutney", "Pickles", "Jam",
+    "Orange juice", "Apple juice", "Fresh soup", "Ready meal", "Pizza", "Garlic bread", "Pastry", "Tofu"
+  ],
+  "freezer": [
+    "Frozen peas", "Peas", "Sweetcorn", "Frozen mixed veg", "Frozen spinach", "Frozen broccoli", "Frozen berries", "Frozen mango",
+    "Chips", "Oven chips", "Potato waffles", "Hash browns", "Roast potatoes", "Frozen Yorkshire puddings",
+    "Fish fingers", "Cod fillets", "Haddock fillets", "Breaded fish", "Frozen prawns",
+    "Chicken nuggets", "Chicken dippers", "Chicken goujons", "Frozen chicken breasts", "Chicken kievs", "Chicken pies", "Beef burgers", "Quarter pounders", "Frozen sausages", "Frozen mince", "Meatballs",
+    "Frozen pizza", "Ice cream", "Ice lollies", "Ice cubes", "Frozen bread", "Frozen naan", "Frozen pastry", "Batch-cooked meals", "Frozen soup", "Vegetarian sausages", "Quorn mince"
+  ],
+  "pantry": [
+    "Bread", "Wholemeal bread", "Rolls", "Submarine rolls", "Wraps", "Pitta bread", "Naan bread", "Bagels", "Crumpets", "Crackers", "Rice cakes",
+    "Pasta", "Spaghetti", "Penne", "Macaroni", "Lasagne sheets", "Noodles", "Egg noodles", "Rice", "Basmati rice", "Microwave rice", "Couscous", "Quinoa", "Oats", "Porridge oats",
+    "Cereal", "Cornflakes", "Weetabix", "Granola",
+    "Potatoes", "Baby potatoes", "Sweet potatoes", "Onions", "Red onions", "Garlic", "Bananas", "Peaches",
+    "Chopped tomatoes", "Passata", "Tomato purée", "Baked beans", "Kidney beans", "Chickpeas", "Lentils", "Butter beans", "Tinned tuna", "Tinned sweetcorn", "Tinned soup", "Coconut milk", "Custard", "Rice pudding",
+    "Flour", "Plain flour", "Self-raising flour", "Sugar", "Caster sugar", "Brown sugar", "Icing sugar", "Baking powder", "Bicarbonate of soda", "Cocoa powder", "Vanilla extract", "Chocolate chips",
+    "Olive oil", "Vegetable oil", "Sunflower oil", "Spray oil", "Vinegar", "Balsamic vinegar", "Soy sauce", "Worcestershire sauce", "Sweet chilli sauce", "Hot sauce", "Gravy granules", "Stock cubes", "Chicken stock cubes", "Beef stock cubes", "Vegetable stock cubes",
+    "Salt", "Sea salt flakes", "Black pepper", "Mixed herbs", "Oregano", "Paprika", "Smoked paprika", "Cumin", "Ground turmeric", "Curry powder", "Garam masala", "Chilli powder", "Chilli flakes", "Cinnamon",
+    "Curry paste", "Pasta sauce", "Curry sauce", "Peanut butter", "Honey", "Marmalade", "Chocolate spread", "Golden syrup",
+    "Tea bags", "Coffee", "Hot chocolate", "Squash", "Fizzy drinks", "Bottled water",
+    "Crisps", "Biscuits", "Chocolate bars", "Cereal bars", "Popcorn", "Nuts", "Raisins", "Dried fruit",
+    "Kitchen roll", "Foil", "Cling film", "Bin bags", "Washing-up liquid", "Dishwasher tablets"
+  ]
+}
