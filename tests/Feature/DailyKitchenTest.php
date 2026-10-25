@@ -133,10 +133,12 @@ class DailyKitchenTest extends TestCase
         $this->assertSame('freezer', \App\Support\FoodDictionary::placeFor('fish fingers'));
         $this->assertSame('fridge', \App\Support\FoodDictionary::placeFor('Milk'));
         $this->assertSame('pantry', \App\Support\FoodDictionary::placeFor('something unusual'));
-        foreach (['Frozen king prawns' => 'Frozen', 'Chicken stock cubes' => 'Cupboard', 'Chicken' => 'Meat & fish', 'Submarine rolls' => 'Bakery', 'Strawberries' => 'Fruit & veg', 'Crisps' => 'Snacks & drinks', 'Coconut milk' => 'Cupboard', 'Milk' => 'Dairy & eggs', 'Butter / spread' => 'Dairy & eggs', 'Frozen ready meals / dumplings' => 'Frozen', 'Fresh soup' => 'Chilled'] as $food => $section) {
+        foreach (['Frozen king prawns' => 'Frozen', 'Chicken stock cubes' => 'Cupboard', 'Chicken' => 'Meat & fish', 'Submarine rolls' => 'Bakery', 'Strawberries' => 'Fruit & veg', 'Crisps' => 'Snacks & drinks', 'Coconut milk' => 'Cupboard', 'Milk' => 'Dairy & eggs', 'Butter / spread' => 'Dairy & eggs', 'Frozen ready meals / dumplings' => 'Frozen', 'Fresh soup' => 'Chilled', 'Toothpaste' => 'Toiletries', 'Sun cream' => 'Toiletries', 'Toilet roll' => 'Cleaning & household', 'Washing-up liquid' => 'Cleaning & household', 'Spray oil' => 'Cupboard'] as $food => $section) {
             $this->assertSame($section, \App\Support\FoodDictionary::section($food), $food);
         }
         $this->assertSame('Chilled', \App\Support\FoodDictionary::section('Mystery dip', 'fridge'));
+        $this->assertSame('Toiletries', \App\Support\FoodDictionary::label('toothpaste'));
+        $this->assertNull(\App\Support\FoodDictionary::label('Milk'));
         $this->assertGreaterThan(200, count(\App\Support\FoodDictionary::all()));
         $this->actingAs($this->kitchen())->get('/inventory')->assertSee('food-suggestions', false)->assertSee('Fish fingers');
     }

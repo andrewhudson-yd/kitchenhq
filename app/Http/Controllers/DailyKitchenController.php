@@ -55,10 +55,10 @@ class DailyKitchenController extends Controller
     {
         $foods = [];
         foreach ($h->inventory()->with('location')->get() as $item) {
-            $foods[Food::name($item->name)] ??= [ucfirst($item->name), $item->location->type];
+            $foods[Food::name($item->name)] ??= array_filter([ucfirst($item->name), $item->location->type, FoodDictionary::label($item->name)]);
         }
         foreach (FoodDictionary::all() as $name => $place) {
-            $foods[Food::name($name)] ??= [$name, $place];
+            $foods[Food::name($name)] ??= array_filter([$name, $place, FoodDictionary::label($name)]);
         }
 
         return array_values($foods);

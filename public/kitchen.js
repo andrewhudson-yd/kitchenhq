@@ -230,7 +230,7 @@
         input.setAttribute('aria-expanded', 'true');
         input.removeAttribute('aria-activedescendant');
         const at = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'i');
-        suggest.list.innerHTML = matches.map((f, i) => `<li role="option" id="${input.id}-opt-${i}" data-index="${i}" aria-selected="false"><span>${escapeHtml(f[0]).replace(at, '<mark>$1</mark>')}</span><small>${placeNames[f[1]] || ''}</small></li>`).join('');
+        suggest.list.innerHTML = matches.map((f, i) => `<li role="option" id="${input.id}-opt-${i}" data-index="${i}" aria-selected="false"><span>${escapeHtml(f[0]).replace(at, '<mark>$1</mark>')}</span><small>${escapeHtml(f[2] || placeNames[f[1]] || '')}</small></li>`).join('');
     }
     function highlight(index) {
         if (!suggest) return;

@@ -7,11 +7,17 @@ class FoodDictionary
     public const PLACES = ['fridge' => 'Fridge', 'freezer' => 'Freezer', 'pantry' => 'Cupboard'];
 
     /** Shop sections in the order you usually walk round a supermarket. */
-    public const SECTIONS = ['Fruit & veg', 'Bakery', 'Meat & fish', 'Dairy & eggs', 'Chilled', 'Frozen', 'Cupboard', 'Snacks & drinks', 'Household', 'Other'];
+    public const SECTIONS = ['Fruit & veg', 'Bakery', 'Meat & fish', 'Dairy & eggs', 'Chilled', 'Frozen', 'Cupboard', 'Snacks & drinks', 'Toiletries', 'Cleaning & household', 'Other'];
+
+    /** Non-food lists in the dictionary: shown with their own label and kept in the cupboard. */
+    public const EXTRAS = ['toiletries' => 'Toiletries', 'cleaning' => 'Cleaning & household'];
 
     /** Ordered keyword rules: earlier rules win, so specific foods come before broad words like "chicken" or "milk". */
     private const SECTION_RULES = [
-        ['Household', 'kitchen roll|foil|cling film|bin bag|washing|dishwasher|toilet|soap|bleach|sponge|detergent'],
+        ['Cupboard', 'spray oil|cooking spray|frylight'],
+        ['Toiletries', 'hand wash|body wash|face wash|hand soap|baby wipes|make-up|hand cream|sun cream|after sun|hand sanitiser|nail varnish'],
+        ['Cleaning & household', 'toilet roll|toilet paper|toilet clean|toilet block|kitchen roll|foil|cling film|baking paper|bin bag|food bag|freezer bag|washing|laundry|fabric|stain|dishwasher|rinse aid|bleach|clean|disinfect|limescale|spray|wipes|sponge|scourer|cloth|rubber glove|detergent|air freshener|candle|light bulb|batteries|battery|matches|dog food|cat food|cat litter|pet food'],
+        ['Toiletries', 'tooth|mouthwash|floss|shampoo|conditioner|shower gel|bubble bath|soap|deodorant|moisturis|lotion|lip balm|cotton|razor|shaving|hair|sanitary|tampon|panty liner|tissue|nappy|nappies|plaster|paracetamol|ibuprofen|antihistamine|tablets|vitamin|medicine|toiletr'],
         ['Snacks & drinks', 'cereal bar|hot chocolate|chocolate bar|milk chocolate|juice'],
         ['Dairy & eggs', 'spreadable butter|butter / spread|margarine'],
         ['Cupboard', 'simplycook|chocolate chip|stock|gravy|granules|tinned|tin of|chopped tomato|passata|tomato pur|ketchup|mayo|sauce|salad cream|mustard|chutney|pickle|jam|marmalade|spread|peanut butter|honey|syrup|coconut milk|baked bean|kidney bean|butter bean|chickpea|lentil|black pepper|powder|flakes|dried|mixed herbs|paste|vinegar|oil|custard|rice pudding|flour|sugar|noodle|jelly|seasoning|spice|paprika|cumin|turmeric|oregano|cinnamon|garam masala|curry'],
@@ -27,6 +33,8 @@ class FoodDictionary
 
     private static ?array $foods = null;
 
+    private static array $labels = [];
+
     /** @return array<string, string> food name => usual place (fridge, freezer, pantry) */
     public static function all(): array
     {
@@ -36,6 +44,12 @@ class FoodDictionary
             foreach (array_keys(self::PLACES) as $place) {
                 foreach ($data[$place] ?? [] as $name) {
                     self::$foods[$name] ??= $place;
+                }
+            }
+            foreach (self::EXTRAS as $list => $label) {
+                foreach ($data[$list] ?? [] as $name) {
+                    self::$foods[$name] ??= 'pantry';
+                    self::$labels[Food::name($name)] ??= $label;
                 }
             }
         }
@@ -71,5 +85,13 @@ class FoodDictionary
             'pantry' => 'Cupboard',
             default => 'Other',
         };
+    }
+
+    /** A label to show instead of the storage place, e.g. "Toiletries" for toothpaste. */
+    public static function label(string $name): ?string
+    {
+        self::all();
+
+        return self::$labels[Food::name($name)] ?? null;
     }
 }
