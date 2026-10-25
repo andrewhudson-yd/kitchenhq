@@ -370,7 +370,8 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 }
 .camera-button:active { transform: scale(.97); }
 .photo-form input:focus-visible + .camera-button { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); }
-.photo-item { gap: 8px; }
+.photo-item { gap: 8px; align-items: flex-start; padding-top: 10px; padding-bottom: 10px; }
+.photo-item .photo-check, .photo-item .photo-place { margin-top: 4px; }
 .photo-check { margin: 0; display: grid; place-items: center; width: 32px; }
 .photo-check input { width: 22px; height: 22px; }
 .photo-name { min-height: 40px; padding: 6px 10px; border-color: transparent; background: transparent; font-weight: 600; }
@@ -381,3 +382,12 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 .photo-actions { position: sticky; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 10px); }
 .photo-add { width: 100%; min-height: 52px; box-shadow: 0 6px 18px rgba(0,0,0,.15); }
 @media (min-width: 760px) { .photo-actions { bottom: 16px; } }
+.level-picker { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 0 6px; }
+.level-picker label { margin: 0; }
+.level-picker input { position: absolute; opacity: 0; pointer-events: none; }
+.level-picker span { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--muted); background: var(--soft); cursor: pointer; border: 1.5px solid transparent; }
+.level-picker .level-plenty input:checked + span { background: var(--brand-soft); color: var(--brand); border-color: var(--brand); }
+.level-picker .level-low input:checked + span { background: var(--low-soft); color: var(--low); border-color: var(--low); }
+.level-picker .level-buy input:checked + span { background: var(--out-soft); color: var(--out); border-color: var(--out); }
+.level-picker input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); }
+.photo-item:has(.level-buy input:checked) .photo-place { visibility: hidden; }

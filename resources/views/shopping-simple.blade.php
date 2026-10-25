@@ -19,13 +19,20 @@ $reason = fn ($row) => match (true) {
 </div>
 @unless($current)<p class="hint">Week of {{ $week->format('j M') }} · <a href="{{ route('shopping') }}">Back to this week</a></p>@endunless
 
+<div class="add-bar">
 <form class="quick-add" method="post" action="{{ route('shopping.add') }}" data-keep-focus autocomplete="off">@csrf
     <div class="quick-add-row">
         <label class="sr-only" for="add-shopping">Add to list</label>
-        <input id="add-shopping" name="food" required maxlength="150" autocomplete="off" autocorrect="off" placeholder="Add to the list, e.g. 2 bread" data-food-suggest data-quantity enterkeyhint="done">
+        <input id="add-shopping" name="food" required maxlength="150" autocomplete="off" autocorrect="off" placeholder="Add to the list" data-food-suggest data-quantity enterkeyhint="done">
         <button class="add-button" aria-label="Add to list">@include('ui-icon',['name'=>'plus'])<span>Add</span></button>
     </div>
 </form>
+<form class="photo-form" method="post" action="{{ route('kitchen.photo') }}" enctype="multipart/form-data">@csrf<input type="hidden" name="target" value="shopping">
+    <input type="file" id="shopping-photo" name="photo" accept="image/*" class="sr-only" data-photo-upload required>
+    <label for="shopping-photo" class="camera-button" title="Take a photo of things you need">@include('ui-icon',['name'=>'camera'])<span class="sr-only">Take a photo of things you need</span></label>
+    <noscript><button class="small secondary">Read photo</button></noscript>
+</form>
+</div>
 
 @if(session('shopping_got'))<form method="post" action="{{ route('shopping.got') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_got.week') }}"><input type="hidden" name="name" value="{{ session('shopping_got.name') }}"><input type="hidden" name="got" value="0"><span>{{ ucfirst(session('shopping_got.name')) }} is back in the kitchen.</span><button class="link">Undo</button></form>@endif
 @if(session('shopping_removed'))<form method="post" action="{{ route('shopping.remove') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_removed.week') }}"><input type="hidden" name="item_key" value="{{ session('shopping_removed.item_key') }}"><input type="hidden" name="removed" value="0"><span>Item removed.</span><button class="link">Undo</button></form>@endif

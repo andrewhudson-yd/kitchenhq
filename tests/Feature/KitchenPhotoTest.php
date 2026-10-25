@@ -53,17 +53,23 @@ class KitchenPhotoTest extends TestCase
         $this->get('/kitchen/photo')->assertOk()->assertSee('What we spotted')->assertSee('Semi-skimmed milk')->assertSee('Peas');
 
         $this->post('/kitchen/photo/add', ['items' => [
-            ['add' => 1, 'name' => 'Semi-skimmed milk', 'place' => 'fridge'],
-            ['add' => 1, 'name' => 'Cheddar cheese', 'place' => 'fridge'],
-            ['add' => 1, 'name' => 'Frozen peas', 'place' => 'freezer'],
-            ['name' => 'Ketchup', 'place' => 'fridge'],
-        ]])->assertRedirect('/inventory?place=fridge')->assertSessionHas('status', '3 items added to the kitchen.');
+            ['add' => 1, 'name' => 'Semi-skimmed milk', 'place' => 'fridge', 'level' => 'low'],
+            ['add' => 1, 'name' => 'Cheddar cheese', 'place' => 'fridge', 'level' => 'plenty'],
+            ['add' => 1, 'name' => 'Frozen peas', 'place' => 'freezer', 'level' => 'plenty'],
+            ['add' => 1, 'name' => 'Bin bags', 'place' => 'pantry', 'level' => 'buy'],
+            ['name' => 'Ketchup', 'place' => 'fridge', 'level' => 'plenty'],
+        ]])->assertRedirect('/inventory?place=fridge')->assertSessionHas('status', 'Done — 3 items in the kitchen, 2 on the shopping list.');
 
-        $this->assertSame('plenty', $h->inventory()->where('name', 'Semi-skimmed milk')->firstOrFail()->qualitative_stock);
+        $this->assertSame('low', $h->inventory()->where('name', 'Semi-skimmed milk')->firstOrFail()->qualitative_stock);
         $this->assertSame('freezer', $h->inventory()->where('name', 'Frozen peas')->firstOrFail()->location->type);
         $this->assertSame(1, $h->inventory()->where('name', 'Cheddar cheese')->count());
         $this->assertSame('plenty', $h->inventory()->where('name', 'Cheddar cheese')->first()->qualitative_stock);
         $this->assertSame(0, $h->inventory()->where('name', 'Ketchup')->count());
+        $this->assertSame(0, $h->inventory()->where('name', 'Bin bags')->count());
+        $list = collect(app(\App\Services\DailyShopping::class)->forWeek($h, $h->currentWeek())['groups']['buy'])->pluck('name');
+        $this->assertTrue($list->contains('Semi-skimmed milk'));
+        $this->assertTrue($list->contains('Bin bags'));
+        $this->assertFalse($list->contains('Cheddar cheese'));
         $this->get('/kitchen/photo')->assertRedirect('/inventory');
     }
 
@@ -85,5 +91,30 @@ class KitchenPhotoTest extends TestCase
         Http::preventStrayRequests();
         $this->actingAs($this->user())->post('/kitchen/photo', ['photo' => $this->photo(), 'place' => 'fridge'])->assertSessionHasErrors('photo');
         Http::assertNothingSent();
+    }
+
+    public function test_shopping_photo_defaults_to_the_list_and_nearly_empty_items_are_flagged(): void
+    {
+        config(['services.openai.key' => 'test-key']);
+        $u = $this->user();
+        $h = $u->household;
+        $this->fakeAi([['name' => 'Cheddar cheese', 'place' => 'fridge'], ['name' => 'Toilet roll']], [['name' => 'Ketchup', 'place' => 'fridge', 'low' => true], ['name' => 'Butter', 'place' => 'fridge']]);
+
+        $this->actingAs($u)->post('/kitchen/photo', ['photo' => $this->photo(), 'target' => 'shopping'])->assertRedirect('/kitchen/photo');
+        $this->get('/kitchen/photo')->assertSee('Add to shopping list')->assertSee('value="buy" checked', false)->assertDontSee('value="plenty" checked', false);
+        $this->post('/kitchen/photo/add', ['items' => [
+            ['add' => 1, 'name' => 'Cheddar cheese', 'place' => 'fridge', 'level' => 'buy'],
+            ['add' => 1, 'name' => 'Toilet roll', 'place' => 'pantry', 'level' => 'buy'],
+        ]])->assertRedirect('/shopping');
+        // Something we track is marked as used up; a new thing just goes on the list.
+        $this->assertSame('out', $h->inventory()->where('name', 'Cheddar cheese')->first()->qualitative_stock);
+        $this->assertSame(0, $h->inventory()->where('name', 'Toilet roll')->count());
+        $list = collect(app(\App\Services\DailyShopping::class)->forWeek($h, $h->currentWeek())['groups']['buy'])->pluck('name');
+        $this->assertTrue($list->contains('Cheddar cheese') && $list->contains('Toilet roll'));
+
+        $this->post('/kitchen/photo', ['photo' => $this->photo(), 'place' => 'fridge']);
+        $page = $this->get('/kitchen/photo')->assertSee('Save')->getContent();
+        $this->assertMatchesRegularExpression('/items\[0\]\[level\]" value="low" checked/', $page);
+        $this->assertMatchesRegularExpression('/items\[1\]\[level\]" value="plenty" checked/', $page);
     }
 }
