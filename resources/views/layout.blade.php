@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f7f5f0">
 <title>@yield('title', 'Kitchen HQ') · Kitchen HQ</title>
-<link rel="stylesheet" href="{{ asset('kitchen.css').'?v=fresh9' }}">
-<script src="{{ asset('kitchen.js').'?v=fresh9' }}" defer></script>
+<link rel="stylesheet" href="{{ asset('kitchen.css').'?v=fresh10' }}">
+<script src="{{ asset('kitchen.js').'?v=fresh10' }}" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>

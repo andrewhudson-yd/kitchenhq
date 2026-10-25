@@ -7,6 +7,7 @@ use App\Http\Controllers\ShoppingRemovalController;
 use App\Http\Controllers\ShoppingPhotoController;
 use App\Http\Controllers\DailyKitchenController;
 use App\Http\Controllers\KitchenController;
+use App\Http\Controllers\KitchenPhotoController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -38,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/shopping/photo/{id}/image', [ShoppingPhotoController::class, 'image'])->whereNumber('id')->name('shopping.photo.image');
     Route::post('/shopping/photo/{id}/read', [ShoppingPhotoController::class, 'read'])->whereNumber('id')->middleware('throttle:5,1')->name('shopping.photo.read');
     Route::post('/shopping/photo/{id}/import', [ShoppingPhotoController::class, 'import'])->whereNumber('id')->name('shopping.photo.import');
+    Route::post('/kitchen/photo', [KitchenPhotoController::class, 'read'])->middleware('throttle:10,1')->name('kitchen.photo');
+    Route::get('/kitchen/photo', [KitchenPhotoController::class, 'review'])->name('kitchen.photo.review');
+    Route::post('/kitchen/photo/add', [KitchenPhotoController::class, 'add'])->name('kitchen.photo.add');
+    Route::post('/kitchen/photo/cancel', [KitchenPhotoController::class, 'cancel'])->name('kitchen.photo.cancel');
     Route::get('/settings', [SettingsController::class, 'show'])->name('settings');
     Route::post('/settings/clear-shopping', [SettingsController::class, 'clearShopping'])->name('settings.clear-shopping');
     Route::post('/settings/clear-kitchen', [SettingsController::class, 'clearKitchen'])->name('settings.clear-kitchen');

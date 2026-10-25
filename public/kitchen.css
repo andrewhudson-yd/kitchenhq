@@ -359,3 +359,25 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 .settings-account > span { display: flex; flex-direction: column; min-width: 0; }
 .settings-account small { color: var(--muted); overflow-wrap: anywhere; }
 .settings-account form { margin: 0; }
+
+/* Kitchen photo */
+.add-bar { display: flex; gap: 8px; align-items: flex-start; }
+.add-bar .quick-add { flex: 1; min-width: 0; }
+.photo-form { margin: 0; }
+.camera-button {
+    display: grid; place-items: center; width: 52px; height: 52px; margin: 0; border-radius: 14px; cursor: pointer;
+    background: var(--surface); color: var(--brand); box-shadow: var(--shadow); border: 1.5px solid var(--line);
+}
+.camera-button:active { transform: scale(.97); }
+.photo-form input:focus-visible + .camera-button { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); }
+.photo-item { gap: 8px; }
+.photo-check { margin: 0; display: grid; place-items: center; width: 32px; }
+.photo-check input { width: 22px; height: 22px; }
+.photo-name { min-height: 40px; padding: 6px 10px; border-color: transparent; background: transparent; font-weight: 600; }
+.photo-name:focus { background: var(--surface); }
+.photo-item small { padding-left: 10px; color: var(--muted); }
+.photo-place { width: auto; min-height: 40px; padding: 6px 8px; font-size: 14px; }
+.photo-item:has(.photo-check input:not(:checked)) .item-name, .photo-item:has(.photo-check input:not(:checked)) .photo-place { opacity: .45; }
+.photo-actions { position: sticky; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 10px); }
+.photo-add { width: 100%; min-height: 52px; box-shadow: 0 6px 18px rgba(0,0,0,.15); }
+@media (min-width: 760px) { .photo-actions { bottom: 16px; } }

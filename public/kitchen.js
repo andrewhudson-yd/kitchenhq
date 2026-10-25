@@ -55,6 +55,7 @@
         if (form) {
             data = new FormData(form);
             if (submitter?.name) data.append(submitter.name, submitter.value);
+            if (form.photoBlob) data.set('photo', form.photoBlob, 'photo.jpg');
             if (!mutation) {
                 url = new URL(form.action, location.href);
                 url.search = new URLSearchParams(data).toString();
@@ -74,7 +75,7 @@
             });
         }
         const upload = form?.enctype === 'multipart/form-data';
-        if (mutation) toast(upload ? 'Uploading and reading…' : 'Saving…', false, true);
+        if (mutation) toast(upload ? 'Looking at your photo…' : 'Saving…', false, true);
         const abort = new AbortController();
         const timeout = setTimeout(() => abort.abort(), 95000);
         try {
@@ -161,6 +162,33 @@
         if (new URL(form.action).origin !== location.origin) return;
         event.preventDefault();
         if (form.reportValidity()) visit(form.action, { form, submitter: event.submitter });
+    });
+    // Kitchen photos: shrink on the phone first so uploads are quick and stay under server limits.
+    function shrinkPhoto(file, size = 1600) {
+        return new Promise(resolve => {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                const scale = Math.min(1, size / Math.max(img.naturalWidth, img.naturalHeight));
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.round(img.naturalWidth * scale);
+                canvas.height = Math.round(img.naturalHeight * scale);
+                canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                URL.revokeObjectURL(url);
+                canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.85);
+            };
+            img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+            img.src = url;
+        });
+    }
+    document.addEventListener('change', async event => {
+        const input = event.target.closest('[data-photo-upload]');
+        if (!input?.files?.length) return;
+        toast('Looking at your photo…', false, true);
+        input.form.photoBlob = await shrinkPhoto(input.files[0]);
+        input.form.requestSubmit();
+        input.form.photoBlob = null;
+        input.value = '';
     });
     document.addEventListener('change', event => {
         const control = event.target.closest('[data-auto-save]');

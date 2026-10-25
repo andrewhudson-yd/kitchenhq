@@ -4,6 +4,7 @@
 @php($places = \App\Support\FoodDictionary::PLACES)
 <h1 class="page-title">Kitchen</h1>
 
+<div class="add-bar">
 <form class="quick-add" method="post" action="{{ route('stock.add') }}" data-keep-focus autocomplete="off">@csrf
     <div class="quick-add-row">
         <label class="sr-only" for="add-food">Add food</label>
@@ -14,6 +15,12 @@
         @foreach($places as $type=>$label)<label><input type="radio" name="place" value="{{ $type }}" @checked($place===$type)><span>{{ $label }}</span></label>@endforeach
     </fieldset>
 </form>
+<form class="photo-form" method="post" action="{{ route('kitchen.photo') }}" enctype="multipart/form-data">@csrf<input type="hidden" name="place" value="{{ $place }}">
+    <input type="file" id="kitchen-photo" name="photo" accept="image/*" class="sr-only" data-photo-upload required>
+    <label for="kitchen-photo" class="camera-button" title="Take a photo and let AI add what it sees">@include('ui-icon',['name'=>'camera'])<span class="sr-only">Take a photo of the {{ strtolower($places[$place]) }}</span></label>
+    <noscript><button class="small secondary">Read photo</button></noscript>
+</form>
+</div>
 
 @if(session('kitchen_removed'))<form method="post" action="{{ route('stock.add') }}" class="undo">@csrf<input type="hidden" name="name" value="{{ session('kitchen_removed.name') }}"><input type="hidden" name="place" value="{{ session('kitchen_removed.place') }}"><input type="hidden" name="level" value="{{ session('kitchen_removed.level') }}"><span>{{ ucfirst(session('kitchen_removed.name')) }} removed.</span><button class="link">Undo</button></form>@endif
 
