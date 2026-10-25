@@ -30,7 +30,7 @@
     @endforeach
 </div>
 
-@php($shelves = $items->groupBy(fn ($item) => \App\Support\FoodDictionary::shelf($item->name, $item->location->type))->sortBy(fn ($rows, $shelf) => array_search($shelf, \App\Support\FoodDictionary::SHELVES)))
+@php($shelves = $items->groupBy(fn ($item) => \App\Support\FoodDictionary::shelfFor($item))->sortBy(fn ($rows, $shelf) => array_search($shelf, \App\Support\FoodDictionary::SHELVES)))
 @forelse($shelves as $shelf => $shelfItems)
 <section class="list" aria-labelledby="shelf-{{ \Illuminate\Support\Str::slug($shelf) }}">
 <h2 id="shelf-{{ \Illuminate\Support\Str::slug($shelf) }}" class="list-title">{{ $shelf }} <small>{{ $shelfItems->count() }}</small></h2>
@@ -45,8 +45,11 @@
         <form id="out-form-{{ $item->id }}" method="post" action="{{ route('stock.level',$item->id) }}">@csrf<input type="hidden" name="level" value="out"><button id="out-{{ $item->id }}" class="chip chip-out" aria-label="We're out of {{ $item->name }} — add to shopping list">We're out</button></form>
         <details class="more" id="more-{{ $item->id }}"><summary aria-label="More options for {{ $item->name }}">@include('ui-icon',['name'=>'more'])</summary>
             <div class="more-panel">
-                <form method="post" action="{{ route('stock.level',$item->id) }}">@csrf<input type="hidden" name="level" value="{{ $level ?? 'plenty' }}">
-                    <label>Move to<select name="location_id" data-auto-save>@foreach($locations as $location)<option value="{{ $location->id }}" @selected($item->storage_location_id===$location->id)>{{ $location->name }}</option>@endforeach</select></label><noscript><button class="small secondary">Move</button></noscript>
+                <form method="post" action="{{ route('stock.edit',$item->id) }}" class="edit-form">@csrf
+                    <label>Name<input name="name" value="{{ $item->name }}" maxlength="150" required autocomplete="off"></label>
+                    <label>Where<select name="location_id">@foreach($locations as $location)<option value="{{ $location->id }}" @selected($item->storage_location_id===$location->id)>{{ $location->name }}</option>@endforeach</select></label>
+                    <label>Section<select name="shelf"><option value="">Automatic ({{ \App\Support\FoodDictionary::shelf($item->name, $item->location->type) }})</option>@foreach(\App\Support\FoodDictionary::SHELVES as $option)<option @selected($item->shelf===$option)>{{ $option }}</option>@endforeach</select></label>
+                    <button class="small" data-close>Save</button>
                 </form>
                 <form id="remove-form-{{ $item->id }}" method="post" action="{{ route('stock.remove',$item->id) }}">@csrf @method('delete')<button class="small danger">Remove from kitchen</button></form>
             </div>

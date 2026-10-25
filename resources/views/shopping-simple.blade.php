@@ -37,7 +37,7 @@ $reason = fn ($row) => match (true) {
 @if(session('shopping_got'))<form method="post" action="{{ route('shopping.got') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_got.week') }}"><input type="hidden" name="name" value="{{ session('shopping_got.name') }}"><input type="hidden" name="got" value="0"><span>{{ ucfirst(session('shopping_got.name')) }} is back in the kitchen.</span><button class="link">Undo</button></form>@endif
 @if(session('shopping_removed'))<form method="post" action="{{ route('shopping.remove') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_removed.week') }}"><input type="hidden" name="item_key" value="{{ session('shopping_removed.item_key') }}"><input type="hidden" name="removed" value="0"><span>Item removed.</span><button class="link">Undo</button></form>@endif
 
-@php($sections = $toBuy->groupBy(fn ($row) => \App\Support\FoodDictionary::section($row['name'], $places[\App\Services\SimpleStock::key($row['name'])] ?? null))->sortBy(fn ($rows, $section) => array_search($section, \App\Support\FoodDictionary::SECTIONS)))
+@php($sections = $toBuy->groupBy(fn ($row) => $picked[\App\Services\SimpleStock::key($row['name'])] ?? \App\Support\FoodDictionary::section($row['name'], $places[\App\Services\SimpleStock::key($row['name'])] ?? null))->sortBy(fn ($rows, $section) => array_search($section, \App\Support\FoodDictionary::SECTIONS)))
 @forelse($sections as $section => $rows)
 <section class="list" aria-labelledby="section-{{ \Illuminate\Support\Str::slug($section) }}">
     <h2 id="section-{{ \Illuminate\Support\Str::slug($section) }}" class="list-title">{{ $section }} <small>{{ $rows->count() }}</small></h2>

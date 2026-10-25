@@ -19,6 +19,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/stock/add', [DailyKitchenController::class, 'addStock'])->name('stock.add');
     Route::post('/stock/{id}/level', [DailyKitchenController::class, 'stock'])->whereNumber('id')->name('stock.level');
+    Route::post('/stock/{id}/edit', [DailyKitchenController::class, 'editStock'])->whereNumber('id')->name('stock.edit');
     Route::delete('/stock/{id}', [DailyKitchenController::class, 'removeStock'])->whereNumber('id')->name('stock.remove');
     Route::post('/shopping/add', [DailyKitchenController::class, 'addToList'])->name('shopping.add');
     Route::post('/shopping/quantity', [DailyKitchenController::class, 'quantity'])->name('shopping.quantity');

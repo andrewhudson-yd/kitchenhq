@@ -116,6 +116,18 @@ class FoodDictionary
         return self::$labels[Food::name($name)] ?? null;
     }
 
+    /** The section an item shows under: the one picked for it, or the automatic one. */
+    public static function shelfFor(object $item): string
+    {
+        return in_array($item->shelf ?? null, self::SHELVES, true) ? $item->shelf : self::shelf($item->name, $item->location?->type);
+    }
+
+    /** The supermarket section for a kitchen shelf: cupboard groups such as "Tins & jars" are all in "Cupboard". */
+    public static function sectionForShelf(string $shelf): string
+    {
+        return in_array($shelf, self::SECTIONS, true) ? $shelf : 'Cupboard';
+    }
+
     /** Which kitchen shelf group an item belongs to, e.g. "Tins & jars" rather than just "Cupboard". */
     public static function shelf(string $name, ?string $place = null): string
     {

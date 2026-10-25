@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class DailyKitchenController extends Controller
 {
@@ -135,6 +136,30 @@ class DailyKitchenController extends Controller
         return redirect()->route('inventory', ['place' => $place])->with('status', ucfirst(trim($data['name'])).' added to the '.strtolower(FoodDictionary::PLACES[$place]).'.');
     }
 
+    /** Rename an item, move it, or pick the section it shows under. */
+    public function editStock(Request $r, int $id)
+    {
+        $h = $this->household($r);
+        $data = $r->validate([
+            'name' => 'required|string|max:150',
+            'location_id' => ['required', Rule::exists('storage_locations', 'id')->where('household_id', $h->id)],
+            'shelf' => ['nullable', Rule::in(FoodDictionary::SHELVES)],
+        ]);
+        $name = trim(preg_replace('/\s+/u', ' ', $data['name']));
+        $item = DB::transaction(function () use ($h, $id, $data, $name) {
+            $item = $h->inventory()->whereKey($id)->lockForUpdate()->firstOrFail();
+            $clash = $h->inventory()->whereKeyNot($id)->get()->first(fn ($other) => SimpleStock::key($other->name) === SimpleStock::key($name) && SimpleStock::level($other) !== 'out');
+            if ($clash) {
+                throw ValidationException::withMessages(['name' => 'You already have '.ucfirst($clash->name).' in the kitchen.']);
+            }
+            $item->update(['name' => $name, 'storage_location_id' => $data['location_id'], 'shelf' => $data['shelf'] ?? null]);
+
+            return $item->load('location');
+        });
+
+        return redirect()->route('inventory', ['place' => $item->location->type])->with('status', ucfirst($item->name).' saved.');
+    }
+
     public function removeStock(Request $r, int $id)
     {
         $h = $this->household($r);
@@ -156,7 +181,8 @@ class DailyKitchenController extends Controller
         $h = $this->household($r);
         $week = $this->week($r);
         return view('shopping-simple', compact('h', 'week') + $shopping->forWeek($h, $week) + ['suggestions' => $this->suggestions($h), 'current' => $week->equalTo($h->currentWeek()),
-            'places' => $h->inventory()->with('location')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => $i->location->type])->all()]);
+            'places' => $h->inventory()->with('location')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => $i->location->type])->all(),
+            'picked' => $h->inventory()->whereNotNull('shelf')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => FoodDictionary::sectionForShelf($i->shelf)])->all()]);
     }
 
     public function check(Request $r)

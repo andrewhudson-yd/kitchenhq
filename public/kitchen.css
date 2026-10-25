@@ -230,7 +230,7 @@ details.list[open] > summary::after { transform: rotate(90deg); }
 .more summary::-webkit-details-marker { display: none; }
 .more[open] summary { background: var(--soft); }
 .more-panel {
-    position: absolute; right: 0; top: 42px; z-index: 15; width: 230px; padding: 12px;
+    position: absolute; right: 0; top: 42px; z-index: 15; width: 260px; padding: 12px;
     background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 30px rgba(0,0,0,.14);
 }
 .more-panel label { margin-bottom: 10px; }
@@ -392,3 +392,6 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 .level-picker input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); }
 .photo-item:has(.level-buy input:checked) .photo-place { visibility: hidden; }
 .list:has(.more[open]) { position: relative; z-index: 6; }
+.edit-form { display: grid; gap: 0; margin-bottom: 10px !important; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.edit-form input, .edit-form select { min-height: 40px; padding: 6px 10px; font-size: 15px; }
+.edit-form button { width: 100%; }

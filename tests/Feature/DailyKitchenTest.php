@@ -178,4 +178,39 @@ class DailyKitchenTest extends TestCase
             $this->assertSame($to, \App\Support\ShoppingQuantity::step($from, $by));
         }
     }
+
+    public function test_items_can_be_renamed_moved_and_given_a_section(): void
+    {
+        $u = $this->kitchen();
+        $h = $u->household;
+        $this->actingAs($u)->post('/stock/add', ['food' => 'Mystery jar', 'place' => 'pantry']);
+        $item = $h->inventory()->where('name', 'Mystery jar')->firstOrFail();
+        $this->assertSame('Cupboard', \App\Support\FoodDictionary::shelfFor($item->load('location')));
+        $fridge = $h->locations()->where('type', 'fridge')->firstOrFail();
+
+        $this->post('/stock/'.$item->id.'/edit', ['name' => 'Tahini', 'location_id' => $fridge->id, 'shelf' => 'Sauces & condiments'])
+            ->assertRedirect('/inventory?place=fridge')->assertSessionHas('status', 'Tahini saved.');
+        $item->refresh()->load('location');
+        $this->assertSame(['Tahini', 'fridge', 'Sauces & condiments'], [$item->name, $item->location->type, $item->shelf]);
+        $this->assertSame('Sauces & condiments', \App\Support\FoodDictionary::shelfFor($item));
+        $this->get('/inventory?place=fridge')->assertSee('Tahini');
+
+        // The picked section is used on the shopping list too, and cupboard groups map to the Cupboard aisle.
+        $this->post('/stock/'.$item->id.'/edit', ['name' => 'Tahini', 'location_id' => $fridge->id, 'shelf' => 'Tins & jars']);
+        $this->post('/stock/'.$item->id.'/level', ['level' => 'out']);
+        $page = $this->get('/shopping')->getContent();
+        $this->assertMatchesRegularExpression('/id="section-cupboard".*?Tahini/s', $page);
+
+        // Back to automatic, and names can't clash with something already in the kitchen.
+        $this->post('/stock/'.$item->id.'/level', ['level' => 'plenty']);
+        $this->post('/stock/'.$item->id.'/edit', ['name' => 'Tahini', 'location_id' => $fridge->id, 'shelf' => '']);
+        $this->assertNull($item->fresh()->shelf);
+        $milk = $h->inventory()->get()->first(fn ($i) => \App\Services\SimpleStock::level($i) !== 'out');
+        $this->post('/stock/'.$item->id.'/edit', ['name' => $milk->name, 'location_id' => $fridge->id])->assertSessionHasErrors('name');
+        $this->post('/stock/'.$item->id.'/edit', ['name' => 'Tahini', 'location_id' => $fridge->id, 'shelf' => 'Garage'])->assertSessionHasErrors('shelf');
+
+        $other = \App\Models\Household::create(['name' => 'Other', 'join_code' => hash('sha256', 'other-edit')]);
+        $theirs = $other->locations()->create(['name' => 'Fridge', 'type' => 'fridge']);
+        $this->post('/stock/'.$item->id.'/edit', ['name' => 'Tahini', 'location_id' => $theirs->id])->assertSessionHasErrors('location_id');
+    }
 }
