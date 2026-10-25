@@ -44,7 +44,9 @@
         const mutation = form && form.method.toLowerCase() !== 'get';
         const previousUrl = location.href;
         const oldScroll = scrollY;
-        const opened = detailsState();
+        // A "Done" button closes the popover it sits in; everything else stays as it was.
+        const closing = submitter?.dataset.close !== undefined ? form?.closest('details[id]')?.id : null;
+        const opened = detailsState().filter(id => id !== closing);
         const focusId = form?.dataset.keepFocus !== undefined ? form.querySelector('[data-food-suggest]')?.id : document.activeElement?.id;
         const row = form?.closest('.item, .stock-row');
         const rowId = row?.id;
@@ -195,8 +197,13 @@
     function escapeHtml(text) {
         return text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
     }
+    const quantityPrefix = /^(\d+(?:\.\d+)?\s*(?:g|kg|ml|l|litres?|pints?|packs?|tins?|cans?|bottles?|bags?|boxes?|jars?|loaf|loaves|bunch(?:es)?|dozen)?\s*(?:x|×)?\s+)(.*)$/i;
+    function splitQuantity(value) {
+        const match = value.match(quantityPrefix);
+        return match ? [match[1], match[2]] : ['', value];
+    }
     function choose(input, food) {
-        input.value = food[0];
+        input.value = (input.dataset.quantity !== undefined ? splitQuantity(input.value)[0] : '') + food[0];
         const radio = input.form?.querySelector(`input[name="${input.dataset.placeTarget}"][value="${food[1]}"]`);
         if (radio) radio.checked = true;
         closeSuggest();
@@ -205,7 +212,7 @@
         input.form?.requestSubmit();
     }
     function showSuggest(input) {
-        const term = input.value.trim().toLowerCase();
+        const term = (input.dataset.quantity !== undefined ? splitQuantity(input.value)[1] : input.value).trim().toLowerCase();
         if (!term) return closeSuggest();
         const all = foods();
         const starts = all.filter(f => f[0].toLowerCase().startsWith(term));

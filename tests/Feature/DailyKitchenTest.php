@@ -142,4 +142,36 @@ class DailyKitchenTest extends TestCase
         $this->assertGreaterThan(200, count(\App\Support\FoodDictionary::all()));
         $this->actingAs($this->kitchen())->get('/inventory')->assertSee('food-suggestions', false)->assertSee('Fish fingers');
     }
+
+    public function test_shopping_list_quantities(): void
+    {
+        $u = $this->kitchen();
+        $h = $u->household;
+        $week = $h->currentWeek()->toDateString();
+        $key = hash('sha256', \App\Services\SimpleStock::key('Semi-skimmed milk'));
+        $this->actingAs($u)->post('/shopping/add', ['food' => '2 semi-skimmed milk'])->assertSessionHas('status', '2 Semi-skimmed milk added to the list.');
+        $this->assertDatabaseHas('shopping_checks', ['household_id' => $h->id, 'item_key' => $key, 'quantity' => '2']);
+        $this->assertDatabaseHas('shopping_extras', ['household_id' => $h->id, 'item_key' => $key, 'name' => 'semi-skimmed milk']);
+        $this->get('/shopping')->assertSee('×2');
+
+        $this->post('/shopping/quantity', ['week' => $week, 'item_key' => $key, 'quantity' => '2', 'step' => 1]);
+        $this->assertDatabaseHas('shopping_checks', ['item_key' => $key, 'quantity' => '3']);
+        $this->post('/shopping/quantity', ['week' => $week, 'item_key' => $key, 'quantity' => '4 pints']);
+        $this->assertDatabaseHas('shopping_checks', ['item_key' => $key, 'quantity' => '4 pints']);
+        $this->post('/shopping/quantity', ['week' => $week, 'item_key' => $key, 'quantity' => '2', 'step' => -1]);
+        $this->assertDatabaseHas('shopping_checks', ['item_key' => $key, 'quantity' => null]);
+        $this->post('/shopping/quantity', ['week' => $week, 'item_key' => 'nope', 'quantity' => '2'])->assertSessionHasErrors('item_key');
+
+        // A quantity typed in the kitchen is ignored rather than becoming part of the name.
+        $this->post('/stock/add', ['food' => '3 tins chopped tomatoes', 'place' => 'pantry']);
+        $this->assertSame(0, $h->inventory()->where('name', 'like', '3 tins%')->count());
+        $this->assertSame(1, $h->inventory()->whereRaw('lower(name) = ?', ['chopped tomatoes'])->count());
+
+        foreach (['milk x2' => ['milk', '2'], '500 g mince' => ['mince', '500g'], 'Milk 2 pints' => ['Milk', '2 pints'], '7up' => ['7up', null], 'bread' => ['bread', null]] as $text => $parsed) {
+            $this->assertSame($parsed, \App\Support\ShoppingQuantity::parse($text), $text);
+        }
+        foreach ([['2 tins', -1, '1 tin'], ['1 loaf', 1, '2 loaves'], ['500g', 1, '600g'], ['2', -1, null], [null, 1, '2']] as [$from, $by, $to]) {
+            $this->assertSame($to, \App\Support\ShoppingQuantity::step($from, $by));
+        }
+    }
 }

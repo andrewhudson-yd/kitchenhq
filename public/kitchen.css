@@ -315,3 +315,24 @@ body:not(:has(.tabs-main)) { padding-bottom: 24px; }
 .swipe.armed .swipe-bg-out { background: color-mix(in srgb, var(--out) 25%, var(--out-soft)); }
 .swipe.armed .swipe-bg-remove { background: color-mix(in srgb, var(--out) 85%, #000); }
 .swipe:has(.more[open]) { overflow: visible; z-index: 5; }
+
+/* Shopping quantities */
+.qty { position: relative; }
+.qty-pill {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 32px; padding: 0 10px;
+    border-radius: 999px; background: var(--brand-soft); color: var(--brand); font-size: 14px; font-weight: 700; white-space: nowrap;
+}
+summary.qty-pill { list-style: none; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+summary.qty-pill::-webkit-details-marker { display: none; }
+.qty-pill.is-empty { background: transparent; color: var(--muted); font-weight: 600; border: 1.5px dashed var(--line); }
+.qty[open] .qty-pill { outline: 2px solid var(--brand); }
+.is-done .qty-pill { background: var(--soft); color: var(--muted); }
+.qty-panel {
+    position: absolute; right: -44px; top: 40px; z-index: 15; width: 280px; padding: 10px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 30px rgba(0,0,0,.14);
+}
+.qty-form { display: flex; gap: 6px; align-items: center; }
+.qty-form input { min-height: 44px; text-align: center; padding: 8px; flex: 1; min-width: 0; }
+.qty-done { order: 4; }
+.qty-step { width: 44px; padding: 0; font-size: 22px; background: var(--soft); color: var(--ink); }
+.list:has(.qty[open]) { position: relative; z-index: 6; }

@@ -28,6 +28,12 @@ class Household extends Model
         return $start->addDays(intdiv((int) $start->diffInDays($today, false) - ($today < $start ? 6 : 0), 7) * 7);
     }
 
+    /** Link parameters for a week's page: none for the current week, so the address stays the same. */
+    public function weekParams(string $week): array
+    {
+        return $week === $this->currentWeek()->toDateString() ? [] : ['week' => $week];
+    }
+
     public function users()
     {
         return $this->hasMany(User::class);

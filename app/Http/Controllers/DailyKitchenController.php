@@ -8,6 +8,7 @@ use App\Services\OpenAiConnection;
 use App\Models\StockMovement;
 use App\Support\Food;
 use App\Support\FoodDictionary;
+use App\Support\ShoppingQuantity;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -114,7 +115,7 @@ class DailyKitchenController extends Controller
 
     public function addStock(Request $r)
     {
-        $r->merge(['name' => $r->input('name', $r->input('food'))]);
+        $r->merge(['name' => ShoppingQuantity::parse((string) $r->input('name', $r->input('food')))[0]]);
         $h = $this->household($r);
         $data = $r->validate([
             'name' => 'required|string|max:150',
@@ -169,13 +170,27 @@ class DailyKitchenController extends Controller
     {
         $r->merge(['name' => $r->input('name', $r->input('food'))]);
         $h = $this->household($r);
-        $data = $r->validate(['name' => 'required|string|max:150']);
+        $r->validate(['name' => 'required|string|max:150']);
+        [$name, $quantity] = ShoppingQuantity::parse($r->input('name'));
         $week = $h->currentWeek()->toDateString();
-        $key = hash('sha256', SimpleStock::key($data['name']));
-        DB::table('shopping_extras')->updateOrInsert(['household_id' => $h->id, 'week' => $week, 'item_key' => $key], ['name' => trim($data['name']), 'source' => 'manual', 'created_at' => now(), 'updated_at' => now()]);
-        DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $week, 'item_key' => $key], ['checked' => false, 'removed' => false, 'stocked_at' => null]);
+        $key = hash('sha256', SimpleStock::key($name));
+        DB::table('shopping_extras')->updateOrInsert(['household_id' => $h->id, 'week' => $week, 'item_key' => $key], ['name' => $name, 'source' => 'manual', 'created_at' => now(), 'updated_at' => now()]);
+        DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $week, 'item_key' => $key], ['checked' => false, 'removed' => false, 'stocked_at' => null] + ($quantity ? ['quantity' => $quantity] : []));
 
-        return redirect()->route('shopping')->with('status', ucfirst(trim($data['name'])).' added to the list.');
+        return redirect()->route('shopping')->with('status', ($quantity ? $quantity.' ' : '').ucfirst($name).' added to the list.');
+    }
+
+    public function quantity(Request $r)
+    {
+        $h = $this->household($r);
+        $data = $r->validate(['week' => 'required|date_format:Y-m-d', 'item_key' => 'required|regex:/^[a-f0-9]{64}$/', 'quantity' => 'nullable|string|max:30', 'step' => 'nullable|integer|in:-1,1']);
+        $where = ['household_id' => $h->id, 'week' => $data['week'], 'item_key' => $data['item_key']];
+        $quantity = isset($data['step'])
+            ? ShoppingQuantity::step(ShoppingQuantity::clean($r->has('quantity') ? $data['quantity'] : DB::table('shopping_checks')->where($where)->value('quantity')), (int) $data['step'])
+            : ShoppingQuantity::clean($data['quantity'] ?? null);
+        DB::table('shopping_checks')->updateOrInsert($where, ['quantity' => $quantity]);
+
+        return redirect()->route('shopping', $h->weekParams($data['week']))->with('status', $quantity ? 'Quantity set to '.$quantity.'.' : 'Quantity cleared.');
     }
 
     /** Ticking an item off puts it straight back in the kitchen; unticking puts it back on the list. */
@@ -191,7 +206,7 @@ class DailyKitchenController extends Controller
             DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $data['week'], 'item_key' => $key], ['checked' => (bool) $data['got'], 'removed' => false, 'stocked_at' => $data['got'] ? now() : null]);
         });
 
-        return redirect()->route('shopping', ['week' => $data['week']])->with('status', $data['got'] ? ucfirst($data['name']).' is back in the kitchen.' : ucfirst($data['name']).' is back on the list.');
+        return redirect()->route('shopping', $h->weekParams($data['week']))->with('status', $data['got'] ? ucfirst($data['name']).' is back in the kitchen.' : ucfirst($data['name']).' is back on the list.');
     }
 
     public function ai(Request $r)
