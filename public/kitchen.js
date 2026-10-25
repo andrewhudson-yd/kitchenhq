@@ -317,4 +317,9 @@
     }
     document.addEventListener('pointerup', endSwipe);
     document.addEventListener('pointercancel', endSwipe);
+
+    document.addEventListener('click', event => {
+        const cancel = event.target.closest('[data-cancel]');
+        if (cancel) cancel.closest('details').open = false;
+    });
 })();

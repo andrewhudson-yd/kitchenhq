@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShoppingRemovalController;
 use App\Http\Controllers\ShoppingPhotoController;
 use App\Http\Controllers\DailyKitchenController;
@@ -37,6 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/shopping/photo/{id}/image', [ShoppingPhotoController::class, 'image'])->whereNumber('id')->name('shopping.photo.image');
     Route::post('/shopping/photo/{id}/read', [ShoppingPhotoController::class, 'read'])->whereNumber('id')->middleware('throttle:5,1')->name('shopping.photo.read');
     Route::post('/shopping/photo/{id}/import', [ShoppingPhotoController::class, 'import'])->whereNumber('id')->name('shopping.photo.import');
+    Route::get('/settings', [SettingsController::class, 'show'])->name('settings');
+    Route::post('/settings/clear-shopping', [SettingsController::class, 'clearShopping'])->name('settings.clear-shopping');
+    Route::post('/settings/clear-kitchen', [SettingsController::class, 'clearKitchen'])->name('settings.clear-kitchen');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/', fn () => redirect()->route('inventory'))->name('dashboard');
     Route::get('/inventory', [DailyKitchenController::class, 'inventory'])->name('inventory');
