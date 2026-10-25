@@ -30,12 +30,15 @@ $reason = fn ($row) => match (true) {
 
 @if(session('shopping_removed'))<form method="post" action="{{ route('shopping.remove') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_removed.week') }}"><input type="hidden" name="item_key" value="{{ session('shopping_removed.item_key') }}"><input type="hidden" name="removed" value="0"><span>Item removed.</span><button class="link">Undo</button></form>@endif
 
-<section class="list" aria-labelledby="to-get">
-    <h2 id="to-get" class="list-title">To get</h2>
-    @forelse($toBuy as $row)@include('shopping-row',['note'=>$reason($row)])@empty
-    <div class="empty"><p><strong>All done.</strong></p><p class="muted">When you run out of something in the kitchen, it lands here.</p></div>
-    @endforelse
+@php($sections = $toBuy->groupBy(fn ($row) => \App\Support\FoodDictionary::section($row['name'], $places[\App\Services\SimpleStock::key($row['name'])] ?? null))->sortBy(fn ($rows, $section) => array_search($section, \App\Support\FoodDictionary::SECTIONS)))
+@forelse($sections as $section => $rows)
+<section class="list" aria-labelledby="section-{{ \Illuminate\Support\Str::slug($section) }}">
+    <h2 id="section-{{ \Illuminate\Support\Str::slug($section) }}" class="list-title">{{ $section }} <small>{{ $rows->count() }}</small></h2>
+    @foreach($rows as $row)@include('shopping-row',['note'=>$reason($row)])@endforeach
 </section>
+@empty
+<section class="list"><div class="empty"><p><strong>All done.</strong></p><p class="muted">When you run out of something in the kitchen, it lands here.</p></div></section>
+@endforelse
 
 @if($maybe->count())
 <details class="list" id="for-meals">

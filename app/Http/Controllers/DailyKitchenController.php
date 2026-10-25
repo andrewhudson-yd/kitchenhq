@@ -154,7 +154,8 @@ class DailyKitchenController extends Controller
     {
         $h = $this->household($r);
         $week = $this->week($r);
-        return view('shopping-simple', compact('h', 'week') + $shopping->forWeek($h, $week) + ['suggestions' => $this->suggestions($h), 'current' => $week->equalTo($h->currentWeek())]);
+        return view('shopping-simple', compact('h', 'week') + $shopping->forWeek($h, $week) + ['suggestions' => $this->suggestions($h), 'current' => $week->equalTo($h->currentWeek()),
+            'places' => $h->inventory()->with('location')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => $i->location->type])->all()]);
     }
 
     public function check(Request $r)
