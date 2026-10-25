@@ -7,7 +7,7 @@
 <form class="quick-add" method="post" action="{{ route('stock.add') }}" data-keep-focus autocomplete="off">@csrf
     <div class="quick-add-row">
         <label class="sr-only" for="add-food">Add food</label>
-        <input id="add-food" name="name" required maxlength="150" placeholder="Add food, e.g. milk" data-food-suggest data-place-target="place" enterkeyhint="done">
+        <input id="add-food" name="food" required maxlength="150" autocomplete="off" autocorrect="off" placeholder="Add food, e.g. milk" data-food-suggest data-place-target="place" enterkeyhint="done">
         <button class="add-button" aria-label="Add">@include('ui-icon',['name'=>'plus'])<span>Add</span></button>
     </div>
     <fieldset class="place-picker"><legend class="sr-only">Where does it go?</legend>

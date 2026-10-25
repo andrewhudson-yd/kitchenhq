@@ -113,7 +113,9 @@ class DailyKitchenTest extends TestCase
         $this->assertSame('out', $milk->fresh()->qualitative_stock);
 
         // Things added straight to the list land in their usual place once bought.
-        $this->post('/shopping/add', ['name' => 'Fish fingers'])->assertRedirect('/shopping');
+        $this->post('/shopping/add', ['food' => 'Fish fingers'])->assertRedirect('/shopping');
+        $this->post('/stock/add', ['food' => 'Raspberries', 'place' => 'fridge'])->assertSessionHasNoErrors();
+        $this->assertSame(1, $h->inventory()->where('name', 'Raspberries')->count());
         $this->get('/shopping')->assertSee('Fish fingers');
         $this->post('/shopping/got', ['week' => $week, 'name' => 'Fish fingers', 'got' => 1]);
         $this->assertSame('freezer', $h->inventory()->where('name', 'Fish fingers')->firstOrFail()->location->type);

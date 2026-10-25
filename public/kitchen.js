@@ -45,7 +45,7 @@
         const previousUrl = location.href;
         const oldScroll = scrollY;
         const opened = detailsState();
-        const focusId = form?.dataset.keepFocus !== undefined ? form.querySelector('input[name=name]')?.id : document.activeElement?.id;
+        const focusId = form?.dataset.keepFocus !== undefined ? form.querySelector('[data-food-suggest]')?.id : document.activeElement?.id;
         const row = form?.closest('.item, .stock-row');
         const rowId = row?.id;
         const rowTop = row?.getBoundingClientRect().top;
@@ -201,6 +201,8 @@
         if (radio) radio.checked = true;
         closeSuggest();
         input.focus();
+        // Picking a suggestion adds it straight away.
+        input.form?.requestSubmit();
     }
     function showSuggest(input) {
         const term = input.value.trim().toLowerCase();

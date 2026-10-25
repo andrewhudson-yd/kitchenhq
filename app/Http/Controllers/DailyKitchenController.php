@@ -114,6 +114,7 @@ class DailyKitchenController extends Controller
 
     public function addStock(Request $r)
     {
+        $r->merge(['name' => $r->input('name', $r->input('food'))]);
         $h = $this->household($r);
         $data = $r->validate([
             'name' => 'required|string|max:150',
@@ -165,6 +166,7 @@ class DailyKitchenController extends Controller
 
     public function addToList(Request $r)
     {
+        $r->merge(['name' => $r->input('name', $r->input('food'))]);
         $h = $this->household($r);
         $data = $r->validate(['name' => 'required|string|max:150']);
         $week = $h->currentWeek()->toDateString();

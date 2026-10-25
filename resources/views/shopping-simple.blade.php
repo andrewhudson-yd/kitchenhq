@@ -23,7 +23,7 @@ $reason = fn ($row) => match (true) {
 <form class="quick-add" method="post" action="{{ route('shopping.add') }}" data-keep-focus autocomplete="off">@csrf
     <div class="quick-add-row">
         <label class="sr-only" for="add-shopping">Add to list</label>
-        <input id="add-shopping" name="name" required maxlength="150" placeholder="Add to the list, e.g. bread" data-food-suggest enterkeyhint="done">
+        <input id="add-shopping" name="food" required maxlength="150" autocomplete="off" autocorrect="off" placeholder="Add to the list, e.g. bread" data-food-suggest enterkeyhint="done">
         <button class="add-button" aria-label="Add to list">@include('ui-icon',['name'=>'plus'])<span>Add</span></button>
     </div>
 </form>
