@@ -391,3 +391,4 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 .level-picker .level-buy input:checked + span { background: var(--out-soft); color: var(--out); border-color: var(--out); }
 .level-picker input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); }
 .photo-item:has(.level-buy input:checked) .photo-place { visibility: hidden; }
+.list:has(.more[open]) { position: relative; z-index: 6; }

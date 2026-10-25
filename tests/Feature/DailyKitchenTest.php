@@ -47,7 +47,7 @@ class DailyKitchenTest extends TestCase
         }
         $this->get('/planner?week=2026-10-20')->assertSee('Lamb keema')->assertSee('26 Oct');
         $this->get('/inventory?place=freezer')->assertSee('Running low')->assertSee("We're out", false)->assertDontSee('Low stock threshold');
-        $this->get('/inventory?place=pantry')->assertSee('Crunchy peanut butter');
+        $this->get('/inventory?place=pantry')->assertSee('Crunchy peanut butter')->assertSee('Breakfast &amp; spreads', false)->assertSee('Tins &amp; jars', false);
         $this->get('/inventory?place=attic')->assertSessionHasErrors('place');
         $this->get('/')->assertRedirect('/inventory');
         $key = $list['groups']['buy'][0]['item_key'];
@@ -139,6 +139,9 @@ class DailyKitchenTest extends TestCase
         }
         $this->assertSame('Chilled', \App\Support\FoodDictionary::section('Mystery dip', 'fridge'));
         $this->assertSame('Toiletries', \App\Support\FoodDictionary::label('toothpaste'));
+        foreach (['All Bran' => 'Breakfast & spreads', 'Aromat' => 'Herbs, spices & stock', 'Baked beans' => 'Tins & jars', 'Balsamic vinegar' => 'Sauces & condiments', 'Basmati rice' => 'Pasta, rice & grains', 'Plain flour' => 'Baking', 'Crackers' => 'Snacks & drinks', 'Milk' => 'Dairy & eggs'] as $food => $shelf) {
+            $this->assertSame($shelf, \App\Support\FoodDictionary::shelf($food, 'pantry'), $food);
+        }
         $this->assertNull(\App\Support\FoodDictionary::label('Milk'));
         $this->assertGreaterThan(200, count(\App\Support\FoodDictionary::all()));
         $this->actingAs($this->kitchen())->get('/inventory')->assertSee('food-suggestions', false)->assertSee('Fish fingers');

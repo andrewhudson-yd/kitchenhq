@@ -30,8 +30,11 @@
     @endforeach
 </div>
 
-<section class="list" aria-label="{{ $places[$place] }}">
-@forelse($items as $item)@php($level=\App\Services\SimpleStock::level($item))
+@php($shelves = $items->groupBy(fn ($item) => \App\Support\FoodDictionary::shelf($item->name, $item->location->type))->sortBy(fn ($rows, $shelf) => array_search($shelf, \App\Support\FoodDictionary::SHELVES)))
+@forelse($shelves as $shelf => $shelfItems)
+<section class="list" aria-labelledby="shelf-{{ \Illuminate\Support\Str::slug($shelf) }}">
+<h2 id="shelf-{{ \Illuminate\Support\Str::slug($shelf) }}" class="list-title">{{ $shelf }} <small>{{ $shelfItems->count() }}</small></h2>
+@foreach($shelfItems as $item)@php($level=\App\Services\SimpleStock::level($item))
 <div class="swipe" data-swipe>
 <div class="swipe-bg swipe-bg-out" aria-hidden="true">@include('ui-icon',['name'=>'shopping'])Shopping list</div>
 <div class="swipe-bg swipe-bg-remove" aria-hidden="true">Remove @include('ui-icon',['name'=>'x'])</div>
@@ -51,10 +54,13 @@
     </div>
 </div>
 </div>
-@empty
-<div class="empty"><p><strong>Nothing in the {{ strtolower($places[$place]) }} yet.</strong></p><p class="muted">Type above to add what you have.</p></div>
-@endforelse
+@endforeach
 </section>
+@empty
+<section class="list">
+<div class="empty"><p><strong>Nothing in the {{ strtolower($places[$place]) }} yet.</strong></p><p class="muted">Type above to add what you have.</p></div>
+</section>
+@endforelse
 <p class="footnote">Swipe right or tap <strong>We're out</strong> to move it to your <a href="{{ route('shopping') }}">shopping list</a>. Swipe left to remove.</p>
 @include('food-suggestions')
 @endsection
