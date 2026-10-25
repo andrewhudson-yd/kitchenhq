@@ -257,4 +257,55 @@
     document.addEventListener('focusout', event => {
         if (suggest && event.target === suggest.input) setTimeout(() => { if (suggest && document.activeElement !== suggest.input) closeSuggest(); }, 150);
     });
+
+    // Kitchen rows: swipe right to send to the shopping list, swipe left to remove.
+    let swipe = null;
+    let swipedAt = 0;
+    // Swallow the click that follows a swipe so it doesn't press a button.
+    document.addEventListener('click', event => {
+        if (Date.now() - swipedAt < 400) { event.stopPropagation(); event.preventDefault(); }
+    }, true);
+    document.addEventListener('pointerdown', event => {
+        if (event.pointerType === 'mouse' || busy) return;
+        const row = event.target.closest('[data-swipe] > .item');
+        if (!row || event.target.closest('details[open], select, input')) return;
+        swipe = { row, wrap: row.parentElement, x: event.clientX, y: event.clientY, dx: 0, active: false, id: event.pointerId };
+    });
+    document.addEventListener('pointermove', event => {
+        if (!swipe || event.pointerId !== swipe.id) return;
+        const dx = event.clientX - swipe.x;
+        const dy = event.clientY - swipe.y;
+        if (!swipe.active) {
+            if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { swipe = null; return; }
+            if (Math.abs(dx) < 12) return;
+            swipe.active = true;
+            swipe.wrap.classList.add('is-swiping');
+            try { swipe.row.setPointerCapture(event.pointerId); } catch { /* Capture is best effort. */ }
+        }
+        swipe.dx = dx;
+        const width = swipe.row.offsetWidth;
+        swipe.row.style.transform = `translateX(${dx}px)`;
+        swipe.wrap.classList.toggle('show-right', dx > 0);
+        swipe.wrap.classList.toggle('show-left', dx < 0);
+        swipe.wrap.classList.toggle('armed', Math.abs(dx) > width * 0.35);
+    });
+    function endSwipe(event) {
+        if (!swipe || event.pointerId !== swipe.id) return;
+        const { row, wrap, dx, active } = swipe;
+        swipe = null;
+        if (!active) return;
+        wrap.classList.remove('is-swiping');
+        const width = row.offsetWidth;
+        const form = Math.abs(dx) > width * 0.35 && event.type === 'pointerup' && document.getElementById(dx > 0 ? row.dataset.swipeRight : row.dataset.swipeLeft);
+        swipedAt = Date.now();
+        setTimeout(() => wrap.classList.remove('show-right', 'show-left', 'armed'), 200);
+        if (form) {
+            row.style.transform = `translateX(${dx > 0 ? width : -width}px)`;
+            setTimeout(() => form.requestSubmit(), 180);
+        } else {
+            row.style.transform = '';
+        }
+    }
+    document.addEventListener('pointerup', endSwipe);
+    document.addEventListener('pointercancel', endSwipe);
 })();

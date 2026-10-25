@@ -297,3 +297,21 @@ body:not(:has(.tabs-main)) { padding-bottom: 24px; }
 .item-name .low-note { color: var(--low); font-weight: 600; }
 .earlier { margin-bottom: 10px; }
 .earlier > summary { cursor: pointer; color: var(--muted); font-weight: 600; font-size: 14px; padding: 6px 2px 10px; }
+
+/* Swipe rows in the kitchen: right = shopping list, left = remove */
+.swipe { position: relative; overflow: hidden; border-top: 1px solid var(--line); }
+.list > .swipe:first-child, .list-title + .swipe { border-top: 0; }
+.list > .swipe:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+.list > .swipe:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+.list > .swipe:only-child { border-radius: var(--radius); }
+.swipe > .item { position: relative; border-top: 0; background: var(--surface); touch-action: pan-y; }
+.swipe.is-swiping > .item { transition: none; }
+.swipe > .item { transition: transform .2s ease; }
+.swipe-bg { position: absolute; inset: 0; display: none; align-items: center; gap: 8px; padding: 0 20px; font-weight: 700; font-size: 15px; }
+.swipe-bg-out { background: var(--out-soft); color: var(--out); justify-content: flex-start; }
+.swipe-bg-remove { background: var(--out); color: #fff; justify-content: flex-end; }
+.swipe.show-right .swipe-bg-out, .swipe.show-left .swipe-bg-remove { display: flex; }
+.swipe.armed .swipe-bg { font-size: 16px; }
+.swipe.armed .swipe-bg-out { background: color-mix(in srgb, var(--out) 25%, var(--out-soft)); }
+.swipe.armed .swipe-bg-remove { background: color-mix(in srgb, var(--out) 85%, #000); }
+.swipe:has(.more[open]) { overflow: visible; z-index: 5; }

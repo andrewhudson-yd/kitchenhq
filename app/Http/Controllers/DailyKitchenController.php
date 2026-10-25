@@ -136,7 +136,8 @@ class DailyKitchenController extends Controller
     public function removeStock(Request $r, int $id)
     {
         $h = $this->household($r);
-        $item = $h->inventory()->whereKey($id)->firstOrFail();
+        $item = $h->inventory()->with('location')->whereKey($id)->firstOrFail();
+        $undo = ['name' => $item->name, 'place' => $item->location->type, 'level' => SimpleStock::level($item) === 'low' ? 'low' : 'plenty'];
         if (StockMovement::where('inventory_item_id', $item->id)->exists() || DB::table('receipt_item_aliases')->where('inventory_item_id', $item->id)->exists()) {
             // Keep the cooking/receipt history: hide it from the kitchen without adding it to the list.
             $item->update(['qualitative_stock' => 'out', 'quantity' => 0]);
@@ -145,7 +146,7 @@ class DailyKitchenController extends Controller
             $item->delete();
         }
 
-        return back()->with('status', ucfirst($item->name).' removed.');
+        return back()->with('status', ucfirst($item->name).' removed.')->with('kitchen_removed', $undo);
     }
 
     public function shopping(Request $r, DailyShopping $shopping)

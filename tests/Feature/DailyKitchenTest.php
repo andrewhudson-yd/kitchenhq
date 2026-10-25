@@ -118,8 +118,12 @@ class DailyKitchenTest extends TestCase
         $this->post('/shopping/got', ['week' => $week, 'name' => 'Fish fingers', 'got' => 1]);
         $this->assertSame('freezer', $h->inventory()->where('name', 'Fish fingers')->firstOrFail()->location->type);
 
-        $this->delete('/stock/'.$milk->id)->assertSessionHasNoErrors();
+        $this->post('/shopping/got', ['week' => $week, 'name' => 'Oat milk', 'got' => 1]);
+        $this->delete('/stock/'.$milk->id)->assertSessionHasNoErrors()->assertSessionHas('kitchen_removed', ['name' => 'Oat milk', 'place' => 'fridge', 'level' => 'plenty']);
         $this->assertNull($milk->fresh());
+        // Undo puts it back where it was.
+        $this->post('/stock/add', ['name' => 'Oat milk', 'place' => 'fridge', 'level' => 'plenty']);
+        $this->assertSame('fridge', $h->inventory()->where('name', 'Oat milk')->firstOrFail()->location->type);
     }
 
     public function test_food_dictionary_suggests_foods_with_their_usual_place(): void
