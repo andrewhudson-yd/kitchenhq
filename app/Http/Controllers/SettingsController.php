@@ -36,7 +36,7 @@ class SettingsController extends Controller
             'places' => FoodDictionary::PLACES,
             'counts' => $kitchen->countBy(fn ($item) => $item->location->type),
             'kitchenTotal' => $kitchen->count(),
-            'shoppingTotal' => $this->shoppingRows($h, $shopping)->count(),
+            'shoppingTotal' => count($shopping->forWeek($h, $h->currentWeek())['groups']['buy']),
         ]);
     }
 

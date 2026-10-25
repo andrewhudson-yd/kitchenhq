@@ -103,7 +103,8 @@ class DailyKitchenTest extends TestCase
         $buy = collect(app(DailyShopping::class)->forWeek($h, CarbonImmutable::parse($week))['groups']['buy'])->pluck('name');
         $this->assertTrue($buy->contains('Oat milk'));
 
-        $this->post('/shopping/got', ['week' => $week, 'name' => 'Oat milk', 'got' => 1])->assertSessionHasNoErrors();
+        $this->post('/shopping/got', ['week' => $week, 'name' => 'Oat milk', 'got' => 1])->assertSessionHasNoErrors()->assertSessionHas('shopping_got.name', 'Oat milk');
+        $this->get('/shopping')->assertDontSee('id="got-'.hash('sha256', 'oat milk').'"', false)->assertDontSee('For this week')->assertDontSee('back in the kitchen</small>', false);
         $this->assertSame('plenty', $milk->fresh()->qualitative_stock);
         $this->get('/inventory?place=fridge')->assertSee('id="stock-'.$milk->id.'"', false);
         $list = app(DailyShopping::class)->forWeek($h, CarbonImmutable::parse($week));

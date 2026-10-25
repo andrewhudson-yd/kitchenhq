@@ -5,7 +5,6 @@
 $all = collect($groups)->flatten(1);
 $bought = $all->filter(fn ($row) => $row['reason'] === 'Bought and saved to Stock');
 $toBuy = collect($groups['buy'])->reject(fn ($row) => $bought->contains('item_key', $row['item_key']));
-$maybe = collect($groups['check'])->reject(fn ($row) => $bought->contains('item_key', $row['item_key']));
 $reason = fn ($row) => match (true) {
     $row['reason'] === 'Out' => 'Ran out',
     $row['reason'] === 'Nearly out' => 'Running low',
@@ -28,6 +27,7 @@ $reason = fn ($row) => match (true) {
     </div>
 </form>
 
+@if(session('shopping_got'))<form method="post" action="{{ route('shopping.got') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_got.week') }}"><input type="hidden" name="name" value="{{ session('shopping_got.name') }}"><input type="hidden" name="got" value="0"><span>{{ ucfirst(session('shopping_got.name')) }} is back in the kitchen.</span><button class="link">Undo</button></form>@endif
 @if(session('shopping_removed'))<form method="post" action="{{ route('shopping.remove') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_removed.week') }}"><input type="hidden" name="item_key" value="{{ session('shopping_removed.item_key') }}"><input type="hidden" name="removed" value="0"><span>Item removed.</span><button class="link">Undo</button></form>@endif
 
 @php($sections = $toBuy->groupBy(fn ($row) => \App\Support\FoodDictionary::section($row['name'], $places[\App\Services\SimpleStock::key($row['name'])] ?? null))->sortBy(fn ($rows, $section) => array_search($section, \App\Support\FoodDictionary::SECTIONS)))
@@ -39,20 +39,6 @@ $reason = fn ($row) => match (true) {
 @empty
 <section class="list"><div class="empty"><p><strong>All done.</strong></p><p class="muted">When you run out of something in the kitchen, it lands here.</p></div></section>
 @endforelse
-
-@if($maybe->count())
-<details class="list" id="for-meals">
-    <summary class="list-title">For this week's meals <small>{{ $maybe->count() }} · check the kitchen first</small></summary>
-    @foreach($maybe as $row)@include('shopping-row',['note'=>$reason($row)])@endforeach
-</details>
-@endif
-
-@if($bought->count())
-<details class="list bought" id="bought">
-    <summary class="list-title">Got <small>{{ $bought->count() }} · back in the kitchen</small></summary>
-    @foreach($bought as $row)@include('shopping-row',['note'=>null,'done'=>true])@endforeach
-</details>
-@endif
 
 <p class="footnote"><a href="{{ route('shopping.photo',['week'=>$week->toDateString()]) }}">Add from a photo of a list</a> · <a href="{{ route('shopping.photo',['week'=>$week->toDateString(),'purpose'=>'receipt']) }}">Scan a receipt</a></p>
 @include('food-suggestions')

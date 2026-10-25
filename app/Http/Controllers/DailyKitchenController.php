@@ -206,7 +206,9 @@ class DailyKitchenController extends Controller
             DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $data['week'], 'item_key' => $key], ['checked' => (bool) $data['got'], 'removed' => false, 'stocked_at' => $data['got'] ? now() : null]);
         });
 
-        return redirect()->route('shopping', $h->weekParams($data['week']))->with('status', $data['got'] ? ucfirst($data['name']).' is back in the kitchen.' : ucfirst($data['name']).' is back on the list.');
+        $response = redirect()->route('shopping', $h->weekParams($data['week']))->with('status', $data['got'] ? ucfirst($data['name']).' is back in the kitchen.' : ucfirst($data['name']).' is back on the list.');
+
+        return $data['got'] ? $response->with('shopping_got', ['week' => $data['week'], 'name' => $data['name']]) : $response;
     }
 
     public function ai(Request $r)
