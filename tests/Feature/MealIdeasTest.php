@@ -59,7 +59,8 @@ class MealIdeasTest extends TestCase
         Http::assertSent(function ($request) {
             $body = json_encode($request->data());
 
-            return str_contains($body, 'quick dinners please') && str_contains($body, 'Crunchy peanut butter') && str_contains($body, 'Noah');
+            // OpenAI's JSON mode refuses requests whose input doesn't mention JSON.
+            return str_contains(json_encode($request->data()['input']), 'Return JSON') && str_contains($body, 'quick dinners please') && str_contains($body, 'Crunchy peanut butter') && str_contains($body, 'Noah');
         });
         $page = $this->get('/planner/ideas')->assertOk()->assertSee('Chicken fajitas')->assertSee('Tortilla wraps')->getContent();
         // The first idea for each day and person is ticked; alternatives are not; bad days and people are corrected.
@@ -116,5 +117,13 @@ class MealIdeasTest extends TestCase
         Http::preventStrayRequests();
         $this->actingAs($this->kitchen())->post('/planner/ideas', ['week' => '2026-10-27'])->assertSessionHasErrors('note');
         Http::assertNothingSent();
+    }
+
+    public function test_openai_rejections_show_its_explanation(): void
+    {
+        config(['services.openai.key' => 'test-key']);
+        Http::fake(['api.openai.com/*' => Http::response(['error' => ['message' => "'messages' must contain the word 'json' <b>in some form</b>.", 'type' => 'invalid_request_error']], 400)]);
+        $this->actingAs($this->kitchen())->post('/planner/ideas', ['week' => '2026-10-27'])
+            ->assertSessionHasErrors(['note' => "OpenAI rejected the request: 'messages' must contain the word 'json' in some form. (HTTP 400; invalid_request_error)"]);
     }
 }

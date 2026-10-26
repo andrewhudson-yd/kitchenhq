@@ -65,7 +65,7 @@ class MealIdeasController extends Controller
                     .'Give about 10 ideas: one per day to plan, plus a few alternatives. Names are short dish names (max 60 characters); description is one appetising sentence. '
                     .'"uses" lists kitchen item names exactly as given; "needs" lists plain ingredient names to buy (no quantities). Use only days from days_to_plan.',
                 'text' => ['format' => ['type' => 'json_object']],
-                'input' => json_encode($context, JSON_THROW_ON_ERROR),
+                'input' => [['role' => 'user', 'content' => [['type' => 'input_text', 'text' => 'Return JSON. Our household data: '.json_encode($context, JSON_THROW_ON_ERROR)]]]],
             ]);
             if (! $response->successful()) {
                 return $back->withErrors(['note' => OpenAiConnection::error($response)]);
