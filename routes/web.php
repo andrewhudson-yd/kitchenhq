@@ -8,6 +8,7 @@ use App\Http\Controllers\ShoppingPhotoController;
 use App\Http\Controllers\DailyKitchenController;
 use App\Http\Controllers\KitchenController;
 use App\Http\Controllers\KitchenPhotoController;
+use App\Http\Controllers\MealIdeasController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -57,6 +58,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/locations/{id}', [KitchenController::class, 'updateLocation'])->whereNumber('id')->name('locations.update');
     Route::delete('/locations/{id}', [KitchenController::class, 'deleteLocation'])->whereNumber('id')->name('locations.destroy');
     Route::get('/planner', [KitchenController::class, 'planner'])->name('planner');
+    Route::post('/planner/ideas', [MealIdeasController::class, 'suggest'])->middleware('throttle:6,1')->name('planner.suggest');
+    Route::get('/planner/ideas', [MealIdeasController::class, 'review'])->name('planner.ideas');
+    Route::post('/planner/ideas/plan', [MealIdeasController::class, 'plan'])->name('planner.ideas.plan');
+    Route::post('/planner/ideas/cancel', [MealIdeasController::class, 'cancel'])->name('planner.ideas.cancel');
     Route::post('/planner/generate', [KitchenController::class, 'generate'])->name('planner.generate');
     Route::post('/meals', [KitchenController::class, 'saveMeal'])->name('meals.store');
     Route::delete('/meals/{id}', [KitchenController::class, 'deleteMeal'])->whereNumber('id')->name('meals.destroy');

@@ -395,3 +395,25 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 .edit-form { display: grid; gap: 0; margin-bottom: 10px !important; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .edit-form input, .edit-form select { min-height: 40px; padding: 6px 10px; font-size: 15px; }
 .edit-form button { width: 100%; }
+
+/* Meal ideas */
+.plan-ai { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 16px; }
+.plan-ai-title small { margin-left: auto; color: var(--muted); font-weight: 500; font-size: 13px; }
+.plan-ai-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 16px; margin: 0 0 10px; color: var(--brand); }
+.plan-ai textarea { min-height: 64px; resize: vertical; }
+.plan-ai-button { width: 100%; margin-top: 10px; min-height: 48px; }
+.plan-ai .hint { margin: 8px 0 0; font-size: 13px; }
+.idea { display: flex; gap: 12px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 10px; border: 2px solid transparent; }
+.idea:has(.idea-pick input:checked) { border-color: var(--brand); }
+.idea-pick { margin: 2px 0 0; }
+.idea-pick input { width: 22px; height: 22px; }
+.idea-body { flex: 1; min-width: 0; }
+.idea h2 { font-size: 17px; margin: 0 0 4px; }
+.idea p { margin: 0 0 6px; font-size: 14px; color: var(--muted); }
+.idea p strong { color: var(--ink); font-weight: 600; margin-right: 4px; }
+.idea-needs strong { color: var(--out) !important; }
+.idea-when { display: flex; gap: 8px; margin-top: 8px; }
+.idea-when label { margin: 0; flex: 1; }
+.idea-when select { min-height: 40px; padding: 6px 10px; font-size: 14px; }
+.idea-replaces { color: var(--low) !important; font-weight: 600; margin-top: 6px !important; }
+.idea-shop { margin: 14px 4px 16px; }

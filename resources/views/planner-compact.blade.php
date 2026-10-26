@@ -6,6 +6,16 @@
     @include('weekbar',['page'=>'planner'])
 </div>
 
+@php($left = collect(range(0,6))->filter(fn ($d) => $week->addDays($d)->gte(today()))->count())
+@php($planWeek = $left < 3 && $week->addDays(6)->gte(today()) ? $week->addWeek() : $week)
+<form class="plan-ai" method="post" action="{{ route('planner.suggest') }}">@csrf<input type="hidden" name="week" value="{{ $planWeek->toDateString() }}">
+    <h2 class="plan-ai-title">@include('ui-icon',['name'=>'sparkle'])Plan {{ $planWeek->equalTo($week) ? 'the week' : 'next week' }} with AI <small>{{ $planWeek->format('j M') }} – {{ $planWeek->addDays(6)->format('j M') }}</small></h2>
+    <label class="sr-only" for="meal-note">What do you fancy this week?</label>
+    <textarea id="meal-note" name="note" rows="2" maxlength="1000" placeholder="What do you fancy? e.g. quick dinners, one veggie night">{{ old('note') }}</textarea>
+    <button class="plan-ai-button">Suggest meals</button>
+    <p class="hint">Uses everything in your kitchen and your family's likes and dislikes.</p>
+</form>
+
 @php($days = collect(range(0,6))->map(fn($d)=>$week->addDays($d)))
 @php($past = $days->filter(fn($d)=>$d->lt(today())))
 @php($dayMeals = fn($date) => $meals->filter(fn($m)=>$m->date->toDateString()===$date->toDateString())->sortBy(fn($m)=>str_contains($m->slot,'lunch') ? 0 : 1))
