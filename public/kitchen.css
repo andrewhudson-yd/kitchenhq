@@ -417,3 +417,23 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 .idea-when select { min-height: 40px; padding: 6px 10px; font-size: 14px; }
 .idea-replaces { color: var(--low) !important; font-weight: 600; margin-top: 6px !important; }
 .idea-shop { margin: 14px 4px 16px; }
+
+/* Meals: AI ideas / add a meal tabs, delete buttons */
+.plan-box { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; }
+.plan-box .plan-ai { box-shadow: none; margin: 0; border-radius: 0; }
+.plan-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin: 12px 12px 0; background: var(--soft); border-radius: 12px; }
+.plan-tabs label { margin: 0; }
+.plan-tabs input { position: absolute; opacity: 0; pointer-events: none; }
+.plan-tabs span { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; border-radius: 9px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.plan-tabs span .ui-icon { width: 18px; height: 18px; }
+.plan-tabs input:checked + span { background: var(--surface); color: var(--brand); box-shadow: var(--shadow); }
+.plan-tabs input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); }
+.plan-panel-add { display: none; padding: 14px 16px; }
+.plan-box:has(input[value=add]:checked) .plan-panel-ai { display: none; }
+.plan-box:has(input[value=add]:checked) .plan-panel-add { display: block; }
+.plan-panel-add .add-meal > button { width: 100%; min-height: 48px; }
+.plan-panel-add .hint { margin: 10px 0 0; font-size: 13px; }
+.meal-row { grid-template-columns: 58px 1fr auto auto; }
+.meal-row form { margin: 0; }
+.meal-delete { width: 32px; min-height: 32px; margin: -6px -8px -6px 0; }
+.meal-delete .ui-icon { width: 18px; height: 18px; }

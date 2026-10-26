@@ -126,4 +126,26 @@ class MealIdeasTest extends TestCase
         $this->actingAs($this->kitchen())->post('/planner/ideas', ['week' => '2026-10-27'])
             ->assertSessionHasErrors(['note' => "OpenAI rejected the request: 'messages' must contain the word 'json' in some form. (HTTP 400; invalid_request_error)"]);
     }
+
+    public function test_meals_can_be_deleted_with_undo_and_saving_stays_on_that_week(): void
+    {
+        $u = $this->kitchen();
+        $h = $u->household;
+        $recipe = $h->recipes()->firstOrFail();
+        $this->actingAs($u)->post('/meals', ['recipe_id' => $recipe->id, 'date' => '2026-10-29', 'slot' => 'late_dinner', 'audience' => 'Adults', 'servings' => 2])
+            ->assertRedirect('/planner?week=2026-10-27');
+        $meal = $h->meals()->whereDate('date', '2026-10-29')->where('audience', 'Adults')->firstOrFail();
+        $this->get('/planner?week=2026-10-27')->assertSee('Add a meal')->assertSee('Ideas from AI')->assertSee('aria-label="Delete '.e($recipe->name), false);
+
+        $this->from('/planner?week=2026-10-27')->delete('/meals/'.$meal->id)->assertRedirect('/planner?week=2026-10-27')
+            ->assertSessionHas('meal_removed', ['name' => $recipe->name, 'recipe_id' => $recipe->id, 'slot' => 'late_dinner', 'audience' => 'Adults', 'servings' => 2, 'date' => '2026-10-29']);
+        $this->assertNull($meal->fresh());
+        $this->post('/meals', session('meal_removed'));
+        $this->assertSame(1, $h->meals()->whereDate('date', '2026-10-29')->where('audience', 'Adults')->count());
+
+        $cooked = $h->meals()->whereDate('date', '2026-10-29')->where('audience', 'Adults')->first();
+        $cooked->update(['cooked_at' => now()]);
+        $this->delete('/meals/'.$cooked->id)->assertSessionHasErrors('meal');
+        $this->get('/planner?week=2026-10-27')->assertDontSee('aria-label="Delete '.e($recipe->name).' on Thursday"', false);
+    }
 }
