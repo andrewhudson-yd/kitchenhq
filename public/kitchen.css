@@ -38,6 +38,7 @@
     }
 }
 
+<<<<<<< Updated upstream
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 a, button, summary, label { -webkit-tap-highlight-color: transparent; }
@@ -417,3 +418,59 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 .idea-when select { min-height: 40px; padding: 6px 10px; font-size: 14px; }
 .idea-replaces { color: var(--low) !important; font-weight: 600; margin-top: 6px !important; }
 .idea-shop { margin: 14px 4px 16px; }
+=======
+/* Premium app finish */
+:root{--ink:#202c2b;--green:#235b50;--muted:#788481;--paper:#f3f5f4;--line:#e5eae8;--lime:#e1eee7;--amber:#fbefd9}
+body{-webkit-font-smoothing:antialiased;font-family:Inter,"Segoe UI",-apple-system,BlinkMacSystemFont,Arial,sans-serif;letter-spacing:-.15px}
+.ui-icon{flex:none;vertical-align:middle}
+.compact-app .top{max-width:868px;padding:23px 24px 19px}
+.compact-app .brand{font-family:inherit;font-size:23px;font-weight:750;letter-spacing:-1px;gap:5px}
+.compact-app .brand>span:last-child{font-size:10px;font-weight:700;letter-spacing:1.2px;background:#e3eae7;color:#536660;border:1px solid #dce4e0;border-radius:5px;padding:4px 5px;margin-left:2px;line-height:1}
+.compact-app .account .quiet{display:flex;gap:7px;min-height:36px;padding:6px 10px;border:1px solid var(--line);background:#ffffff99;font-size:11px;font-weight:500;border-radius:9px;color:#6a7974}
+.compact-app .account .ui-icon{width:15px;height:15px}
+.compact-app h1{font-family:inherit;font-size:29px;letter-spacing:-1.1px;font-weight:700;line-height:1.2}
+.compact-app h2{font-family:inherit;font-size:17px;letter-spacing:-.4px;font-weight:650}
+.compact-app h2 small{font-size:11px;font-weight:500;letter-spacing:0;background:#f2f5f3;padding:3px 7px;border-radius:5px}
+.compact-app nav{gap:5px;padding:5px;background:#e9eeeb;border:1px solid #e3e8e5;border-radius:13px}
+.compact-app nav a{display:flex;flex:1;align-items:center;justify-content:center;gap:8px;border-radius:9px;padding:10px 16px;font-size:13px;font-weight:550;color:#76827c;border:0;margin:0}
+.compact-app nav a.active{background:#fff;color:var(--green);box-shadow:0 2px 6px #1d3c2810;font-weight:650}
+.compact-app main{margin-top:25px}
+.compact-app .section-head{margin-bottom:17px;align-items:center}
+.compact-app .section-head>a,.compact-app .text-action{font-size:12px;text-decoration:none;font-weight:550;color:#60756c}
+.compact-app .card{border:1px solid #e5ebe7;border-radius:14px;background:#fff;padding:17px 18px;margin-bottom:13px;box-shadow:0 3px 12px #213b2c04}
+.compact-app .weekbar{color:#7b8982;font-size:11px;margin-bottom:18px;gap:10px}
+.compact-app .weekbar .button{background:white;color:#6b7c73;border:1px solid var(--line);border-radius:8px;min-height:30px;padding:3px 10px;font-weight:500}
+.compact-app button,.compact-app .button{font-weight:600;border-radius:9px}
+.compact-app .finish-shopping{font-size:14px;min-height:48px;box-shadow:0 4px 10px #235b5016}
+.compact-app .got-button{background:#edf4f0;color:#285d4b;border:1px solid #dce9e1;font-size:12px;border-radius:8px;min-width:76px}
+.compact-app .stock-row>strong,.compact-app .shopping-row strong{font-weight:550}
+.compact-app .stock-pill{min-height:35px;font-weight:550;border-radius:8px}
+.compact-app .stock-pill.plenty{background:#edf6ef;border-color:#e0ece2;color:#487450}
+.compact-app .stock-pill.nearly-out{background:#fff5e4;border-color:#f3e7ce;color:#99713a}
+.compact-app .today-meals{border-top:3px solid #bfd5c8}
+.compact-app .today-meal{padding:17px 0}
+.compact-app .today-meal span{font-size:11px;font-weight:550;padding-top:2px}
+.compact-app .today-meal strong{font-size:14px;font-weight:600;letter-spacing:-.2px}
+.compact-app details>summary{font-size:13px;font-weight:550;color:#53685e}
+.compact-app .compact-day h2{font-size:15px}
+.compact-app input,.compact-app select,.compact-app textarea{border-color:#dbe4de;border-radius:8px;background:#fbfcfb}
+.compact-app .remove-item{color:#a0aaa5;background:transparent}
+.compact-app .stock-more-panel{border-radius:12px;box-shadow:0 8px 28px #203b3415}
+#save-status{background:#235b50;border-radius:10px;box-shadow:0 5px 20px #203b3418}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline-color:#94b7a2}
+@media(max-width:760px){.compact-app .top{padding:21px 18px 18px}.compact-app main{margin-top:14px}.compact-app .brand{font-size:23px}.compact-app h1{font-size:28px}.compact-app .card{padding:16px}.compact-app nav{gap:6px;border-radius:0;background:#ffffffed;padding:8px 15px calc(8px + env(safe-area-inset-bottom));border:0;border-top:1px solid #e4ebe6;box-shadow:0 -5px 24px #203b3405;backdrop-filter:blur(18px)}.compact-app nav a{flex-direction:column;gap:4px;min-height:56px;padding:6px 10px;font-size:10px;letter-spacing:.2px;font-weight:550}.compact-app nav a.active{background:#edf4ef;color:#235b50;box-shadow:none}.compact-app nav .ui-icon{width:21px;height:21px}.compact-app .today-meal strong{font-size:14px}.compact-app .account .quiet span{display:none}.compact-app .account .quiet{padding:8px;border-color:transparent;background:transparent}.compact-app .account .ui-icon{width:18px;height:18px}}
+/* Full-width week navigation on Meals and Shopping */
+.compact-app .weekbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;width:100%;gap:12px;padding:7px;background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 2px 8px #213b2c03}
+.compact-app .weekbar>strong{flex:1;min-width:0;text-align:center;font-size:12px;font-weight:550;color:#63766d}
+.compact-app .weekbar>.button{flex:0 0 36px;min-height:36px;border:0;background:#f3f6f4;font-size:16px;padding:5px}
+@media(max-width:760px){.compact-app .weekbar{width:100%;gap:8px}.compact-app .weekbar>.button{flex-basis:36px;min-height:36px}}
+
+/* Meal ingredient exchange */
+.exchange-recipe{padding-top:16px;margin-top:16px;border-top:1px solid var(--line)}
+.exchange-recipe:first-child{padding-top:0;margin-top:0;border-top:0}
+.exchange-row{padding:13px 0;border-top:1px solid #edf0eb;overflow-wrap:anywhere}
+.exchange-row p{margin:7px 0 0}.exchange-row-title{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.exchange-row-title strong{font-size:14px}.exchange-note{white-space:pre-wrap}
+.exchange-batch{margin-top:18px}.exchange-batch>summary{overflow-wrap:anywhere}
+@media(max-width:760px){.exchange-row-title{display:block}.exchange-row-title .pill{margin-top:7px}.compact-app .section-head>.actions{gap:8px;flex-direction:column;align-items:flex-end}.compact-app .section-head>.actions .text-action{font-size:12px}}
+>>>>>>> Stashed changes

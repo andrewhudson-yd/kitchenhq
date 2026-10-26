@@ -6,7 +6,6 @@ use App\Models\Household;
 use App\Models\User;
 use App\Services\DailyShopping;
 use App\Services\PurchaseReconciliation;
-use App\Services\SimpleStock;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -26,7 +25,18 @@ class PurchaseReceiptTest extends TestCase
         $location = $h->locations()->create(['name' => 'Cupboard', 'type' => 'pantry']);
         $h->inventory()->create(['name' => 'Coffee', 'qualitative_stock' => 'out', 'quantity' => 0, 'unit' => 'g', 'storage_location_id' => $location->id]);
         DB::table('shopping_extras')->insert(['household_id' => $h->id, 'week' => '2026-10-20', 'name' => 'Milk', 'item_key' => hash('sha256', 'milk'), 'source' => 'manual']);
+
         return User::factory()->create(['household_id' => $h->id]);
+    }
+
+    private function photoId(): int
+    {
+        return (int) DB::table('shopping_photo_drafts')->orderByDesc('id')->value('id');
+    }
+
+    private function batchId(): int
+    {
+        return (int) DB::table('purchase_batches')->orderByDesc('id')->value('id');
     }
 
     private function photo()
@@ -45,12 +55,12 @@ class PurchaseReceiptTest extends TestCase
         $u = $this->kitchen();
         $this->assertSame('Coffee', PurchaseReconciliation::name('JS COFFEE 200g'));
         $this->actingAs($u)->post('/shopping/check', ['week' => '2026-10-20', 'item_key' => hash('sha256', 'coffee'), 'checked' => 1]);
-        $this->post('/shopping/photo', ['purpose' => 'receipt', 'week' => '2026-10-20', 'photo' => $this->photo()])->assertRedirect('/shopping/photo/1');
-        $this->post('/shopping/photo/1/purchases', ['items' => "JS COFFEE 200g\nCoffee\nMilk\nApples"])->assertRedirect('/shopping/purchases/1');
-        $this->assertCount(3, $this->rows(1));
+        $this->post('/shopping/photo', ['purpose' => 'receipt', 'week' => '2026-10-20', 'photo' => $this->photo()])->assertRedirect('/shopping/photo/'.$this->photoId());
+        $this->post('/shopping/photo/'.$this->photoId().'/purchases', ['items' => "JS COFFEE 200g\nCoffee\nMilk\nApples"])->assertRedirect('/shopping/purchases/'.$this->batchId());
+        $this->assertCount(3, $this->rows($this->batchId()));
         $this->assertDatabaseCount('inventory_items', 1);
-        $this->get('/shopping/purchases/1')->assertOk()->assertSee('Receipt + picked up');
-        $this->post('/shopping/purchases/1/save', ['rows' => $this->rows(1)])->assertSessionHasNoErrors()->assertRedirect('/shopping?week=2026-10-20');
+        $this->get('/shopping/purchases/'.$this->batchId())->assertOk()->assertSee('Receipt + picked up');
+        $this->post('/shopping/purchases/'.$this->batchId().'/save', ['rows' => $this->rows($this->batchId())])->assertSessionHasNoErrors()->assertRedirect('/shopping?week=2026-10-20');
         $this->assertDatabaseCount('inventory_items', 3);
         $coffee = $u->household->inventory()->where('name', 'Coffee')->firstOrFail();
         $this->assertNull($coffee->quantity);
@@ -59,9 +69,9 @@ class PurchaseReceiptTest extends TestCase
         $list = app(DailyShopping::class)->forWeek($u->household, CarbonImmutable::parse('2026-10-20'));
         $this->assertCount(0, $list['groups']['buy']);
         $this->assertNotNull(DB::table('shopping_photo_drafts')->first()->imported_at);
-        $this->post('/shopping/purchases/1/save', ['rows' => $this->rows(1)])->assertSessionHasNoErrors();
+        $this->post('/shopping/purchases/'.$this->batchId().'/save', ['rows' => $this->rows($this->batchId())])->assertSessionHasNoErrors();
         $this->assertDatabaseCount('inventory_items', 3);
-        $this->post('/shopping/photo', ['purpose' => 'receipt', 'week' => '2026-10-20', 'photo' => $this->photo()])->assertRedirect('/shopping/photo/1');
+        $this->post('/shopping/photo', ['purpose' => 'receipt', 'week' => '2026-10-20', 'photo' => $this->photo()])->assertRedirect('/shopping/photo/'.$this->photoId());
         $this->assertDatabaseCount('shopping_photo_drafts', 1);
     }
 
@@ -73,7 +83,7 @@ class PurchaseReceiptTest extends TestCase
         config(['services.openai.key' => 'sk-test-not-real']);
         $response = ['output' => [['content' => [['type' => 'output_text', 'text' => '{"items":["JS COFFEE 200g","Coffee","Milk"]}']]]]];
         Http::fake(['api.openai.com/v1/responses' => Http::response($response)]);
-        $this->actingAs($u)->post('/shopping/photo', ['purpose' => 'receipt', 'week' => '2026-10-20', 'photo' => $this->photo()])->assertRedirect('/shopping/purchases/1')->assertSessionHasNoErrors();
+        $this->actingAs($u)->post('/shopping/photo', ['purpose' => 'receipt', 'week' => '2026-10-20', 'photo' => $this->photo()])->assertRedirect('/shopping/purchases/'.$this->batchId())->assertSessionHasNoErrors();
         $this->assertSame(['Coffee', 'Milk'], json_decode(DB::table('shopping_photo_drafts')->first()->items, true));
         $this->assertDatabaseCount('inventory_items', 1);
         Http::assertSent(fn ($request) => str_contains($request['instructions'], 'JS COFFEE 200g becomes Coffee') && $request['store'] === false);
@@ -83,15 +93,15 @@ class PurchaseReceiptTest extends TestCase
     {
         $u = $this->kitchen();
         $this->actingAs($u)->post('/shopping/check', ['week' => '2026-10-20', 'item_key' => hash('sha256', 'coffee'), 'checked' => 1]);
-        $this->post('/shopping/purchases/review', ['week' => '2026-10-20'])->assertRedirect('/shopping/purchases/1');
+        $this->post('/shopping/purchases/review', ['week' => '2026-10-20'])->assertRedirect('/shopping/purchases/'.$this->batchId());
         $foreign = $this->kitchen();
-        $this->actingAs($foreign)->get('/shopping/purchases/1')->assertNotFound();
-        $this->post('/shopping/purchases/1/save', ['rows' => $this->rows(1)])->assertNotFound();
-        $rows = $this->rows(1);
+        $this->actingAs($foreign)->get('/shopping/purchases/'.$this->batchId())->assertNotFound();
+        $this->post('/shopping/purchases/'.$this->batchId().'/save', ['rows' => $this->rows($this->batchId())])->assertNotFound();
+        $rows = $this->rows($this->batchId());
         $rows[0]['inventory_id'] = $foreign->household->inventory()->first()->id;
-        $this->actingAs($u)->post('/shopping/purchases/1/save', ['rows' => $rows])->assertSessionHasErrors('rows.0.inventory_id');
+        $this->actingAs($u)->post('/shopping/purchases/'.$this->batchId().'/save', ['rows' => $rows])->assertSessionHasErrors('rows.0.inventory_id');
         $this->assertSame('out', $u->household->inventory()->first()->qualitative_stock);
-        $this->post('/shopping/purchases/1/save', ['rows' => $this->rows(1)])->assertSessionHasNoErrors();
+        $this->post('/shopping/purchases/'.$this->batchId().'/save', ['rows' => $this->rows($this->batchId())])->assertSessionHasNoErrors();
         $this->assertSame('plenty', $u->household->inventory()->first()->qualitative_stock);
     }
 

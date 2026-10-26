@@ -1,0 +1,20 @@
+ingredient_id,ingredient_name,quantity,unit,category,inventory_availability,recipe_id,recipe_name,meal_date,meal_type,servings,inventory_quantity,inventory_unit,reported_inventory_min,reported_inventory_max,inventory_quantity_confirmed,purchase_quantity,notes
+chicken_thigh,"Chicken thigh, boneless",450,g,Meat,buy,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,Buy 400–500 g; 450 g is the planning target.
+chorizo,Chorizo,150,g,Meat,buy,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,
+cooked_prawns,Frozen cooked king prawns,300,g,Frozen seafood,have,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,g,250,300,false,,User reports roughly 250–300 g frozen; amount unconfirmed. Weigh before cooking; use available amount and review any shortfall. Already cooked: add near the end to heat through.
+peas,Frozen peas,150,g,Frozen vegetables,have,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,Stock reported low; quantity unknown. Check available amount and buy any shortfall.
+tomatoes,Chopped tomatoes,400,g,Tinned goods,have,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,Reported plenty; no measured stock quantity. Recipe target is 400 g.
+olive_oil,Olive oil,30,ml,Oils,have,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,In stock; quantity unknown.
+stock,Prepared chicken or vegetable stock,900,ml,Stock and seasonings,have,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,"Stock products in stock; type, strength and amount unknown. Prepare about 900 ml following product dilution instructions; use as needed for rice. This is prepared liquid, not 900 ml of concentrate."
+salt,Salt,,to taste,Stock and seasonings,have,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,In stock; quantity unknown. Taste before adding because stock and chorizo can be salty.
+pepper,Black pepper,,to taste,Stock and seasonings,have,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,In stock; quantity unknown.
+garlic,Garlic,3,clove,Vegetables,check,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,Check cupboard; buy only if needed.
+paprika,Smoked paprika,2,tsp,Stock and seasonings,check,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,Check cupboard; buy only if needed.
+red_pepper,Red pepper,1,whole,Vegetables,buy,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,
+onion,Onion,1,whole,Vegetables,buy,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,
+lemon,Lemon,1,whole,Fruit,buy,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,Cut into wedges to serve.
+rice,Paella rice,300,g,Rice and grains,buy,paella,"Chicken, chorizo and cooked king prawn paella",2026-10-24,dinner,4,,,,,false,,Dry weight.
+strawberries,Fresh strawberries,450,g,Fruit,buy,eton_mess,Strawberry Eton Mess,2026-10-24,dinner,4,,,,,false,,"Buy 400–500 g; 450 g is the planning target, before hulling."
+cream,Double cream,300,ml,Dairy,buy,eton_mess,Strawberry Eton Mess,2026-10-24,dinner,4,,,,,false,,
+meringue,Meringue nests,5,nest,Bakery and desserts,buy,eton_mess,Strawberry Eton Mess,2026-10-24,dinner,4,,,,,false,,Buy 4–6 nests; 5 is the planning target. Nest sizes vary.
+icing_sugar,Icing sugar,15,g,Baking,check,eton_mess,Strawberry Eton Mess,2026-10-24,dinner,4,,,,,false,,"Check cupboard; optional, to taste. Omit if strawberries and meringues are sweet enough."

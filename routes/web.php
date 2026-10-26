@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ShoppingExchangeController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShoppingRemovalController;
@@ -18,6 +19,12 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:6,1');
 });
 Route::middleware('auth')->group(function () {
+    Route::get('/shopping/import', [ShoppingExchangeController::class, 'form'])->name('shopping.exchange');
+    Route::delete('/shopping/import/{id}', [ShoppingExchangeController::class, 'remove'])->whereNumber('id')->name('shopping.exchange.remove');
+    Route::get('/shopping/import/example/{format}', [ShoppingExchangeController::class, 'example'])->whereIn('format', ['json', 'csv'])->name('shopping.exchange.example');
+    Route::post('/shopping/import/preview', [ShoppingExchangeController::class, 'prepare'])->middleware('throttle:20,1')->name('shopping.exchange.prepare');
+    Route::get('/shopping/import/preview/{token}', [ShoppingExchangeController::class, 'preview'])->whereUuid('token')->name('shopping.exchange.preview');
+    Route::post('/shopping/import/preview/{token}/save', [ShoppingExchangeController::class, 'save'])->whereUuid('token')->name('shopping.exchange.save');
     Route::post('/stock/add', [DailyKitchenController::class, 'addStock'])->name('stock.add');
     Route::post('/stock/{id}/level', [DailyKitchenController::class, 'stock'])->whereNumber('id')->name('stock.level');
     Route::post('/stock/{id}/edit', [DailyKitchenController::class, 'editStock'])->whereNumber('id')->name('stock.edit');

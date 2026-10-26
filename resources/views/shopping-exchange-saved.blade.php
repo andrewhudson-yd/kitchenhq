@@ -1,0 +1,4 @@
+@if($ingredientImports->isNotEmpty())
+<section class="card" id="imported-meal-ingredients"><h2>Imported meal ingredients</h2><p class="hint">Planning requirements and reported stock from your files. These are kept separate from the live To get list. “Purchase requested” is a note, not a recorded purchase; unknown amounts are not treated as zero.</p>
+@foreach($ingredientImports as $ingredientImport)<details class="exchange-batch" open><summary>{{ count($ingredientImport->exchange['ingredients']) }} ingredients · {{ $ingredientImport->source_name }}</summary>@include('shopping-exchange-rows',['payload'=>$ingredientImport->exchange])<form method="post" action="{{ route('shopping.exchange.remove',$ingredientImport->id) }}">@csrf @method('DELETE')<button class="small danger">Remove imported file</button></form></details>@endforeach</section>
+@endif
