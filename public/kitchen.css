@@ -60,6 +60,8 @@ img { max-width: 100%; }
 .sr-only, .skip:not(:focus) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip:focus { position: fixed; top: 8px; left: 8px; z-index: 50; background: var(--surface); padding: 8px 12px; border-radius: 8px; }
 :focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); outline-offset: 2px; }
+/* Headings get focus after a page change so screen readers announce them; they aren't controls, so no ring. */
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; }
 .ui-icon { flex: none; }
 
 /* Buttons */
