@@ -154,22 +154,25 @@ class KitchenController extends Controller
             $h->meals()->updateOrCreate($key, $data);
         });
 
-        return redirect()->route('planner', ['week' => ($h->plan_starts_on ?? CarbonImmutable::parse($data['date'])->startOfWeek()->toDateString())])->with('status', 'Meal planned.');
+        return redirect()->route('planner', $h->weekParams($h->weekOf(CarbonImmutable::parse($data['date']))->toDateString()))->with('status', 'Meal planned.');
     }
 
     public function deleteMeal(Request $r, int $id)
     {
         $h = $this->household($r);
-        DB::transaction(function () use ($h, $id) {
+        $meal = DB::transaction(function () use ($h, $id) {
             Household::whereKey($h->id)->lockForUpdate()->firstOrFail();
-            $meal = $h->meals()->whereKey($id)->firstOrFail();
+            $meal = $h->meals()->with('recipe')->whereKey($id)->firstOrFail();
             if ($meal->cooked_at) {
                 throw ValidationException::withMessages(['meal' => 'Cooked meals are kept as a stock audit record.']);
             }
             $meal->delete();
+
+            return $meal;
         });
 
-        return back()->with('status', 'Meal removed.');
+        return back()->with('status', $meal->recipe->name.' removed.')
+            ->with('meal_removed', ['name' => $meal->recipe->name] + $meal->only(['recipe_id', 'slot', 'audience', 'servings']) + ['date' => $meal->date->toDateString()]);
     }
 
     public function cook(Request $r, int $id, CookMeal $cook)
