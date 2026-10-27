@@ -8,13 +8,33 @@
 
 @php($left = collect(range(0,6))->filter(fn ($d) => $week->addDays($d)->gte(today()))->count())
 @php($planWeek = $left < 3 && $week->addDays(6)->gte(today()) ? $week->addWeek() : $week)
-<form class="plan-ai" method="post" action="{{ route('planner.suggest') }}">@csrf<input type="hidden" name="week" value="{{ $planWeek->toDateString() }}">
+@if(session('meal_removed'))<form method="post" action="{{ route('meals.store') }}" class="undo">@csrf @foreach(['recipe_id','date','slot','audience','servings'] as $field)<input type="hidden" name="{{ $field }}" value="{{ session('meal_removed.'.$field) }}">@endforeach<span>{{ session('meal_removed.name') }} removed.</span><button class="link">Undo</button></form>@endif
+<div class="plan-box">
+<div class="plan-tabs" role="tablist">
+    <label><input type="radio" name="plan-tab" value="ai" checked><span>@include('ui-icon',['name'=>'sparkle'])Ideas from AI</span></label>
+    <label><input type="radio" name="plan-tab" value="add" @checked($errors->has('date') || $errors->has('recipe_id'))><span>@include('ui-icon',['name'=>'plus'])Add a meal</span></label>
+</div>
+<form class="plan-ai plan-panel plan-panel-ai" method="post" action="{{ route('planner.suggest') }}">@csrf<input type="hidden" name="week" value="{{ $planWeek->toDateString() }}">
     <h2 class="plan-ai-title">@include('ui-icon',['name'=>'sparkle'])Plan {{ $planWeek->equalTo($week) ? 'the week' : 'next week' }} with AI <small>{{ $planWeek->format('j M') }} – {{ $planWeek->addDays(6)->format('j M') }}</small></h2>
     <label class="sr-only" for="meal-note">What do you fancy this week?</label>
     <textarea id="meal-note" name="note" rows="2" maxlength="1000" placeholder="What do you fancy? e.g. quick dinners, one veggie night">{{ old('note') }}</textarea>
     <button class="plan-ai-button">Suggest meals</button>
     <p class="hint">Uses everything in your kitchen and your family's likes and dislikes.</p>
 </form>
+<div class="plan-panel plan-panel-add">
+<form method="post" action="{{ route('meals.store') }}" class="add-meal">@csrf
+    <div class="form-grid">
+        <label>Day<input type="date" name="date" value="{{ ($week <= today() && today() <= $week->addDays(6)) ? today()->toDateString() : $week->toDateString() }}" required></label>
+        <label>Meal<select name="slot"><option value="late_dinner">Adult dinner</option><option value="early_dinner">Earlier dinner</option><option value="lunch">Lunch</option><option value="packed_lunch">Packed lunch</option></select></label>
+        <label>For<select name="audience"><option>Adults</option><option>Noah</option><option>You</option><option>Everyone</option></select></label>
+        <label>Servings<input type="number" name="servings" value="2" min="1" max="20" required></label>
+        <label class="full">What<select name="recipe_id">@foreach($recipes as $recipe)<option value="{{ $recipe->id }}">{{ $recipe->name }}</option>@endforeach</select></label>
+    </div>
+    <button>Save meal</button>
+</form>
+<p class="hint">Meal ingredients you don't have show up on the <a href="{{ route('shopping',['week'=>$week->toDateString()]) }}">shopping list</a>. <a href="{{ route('recipes') }}">Edit recipes</a></p>
+</div>
+</div>
 
 @php($days = collect(range(0,6))->map(fn($d)=>$week->addDays($d)))
 @php($past = $days->filter(fn($d)=>$d->lt(today())))
@@ -32,17 +52,5 @@
 <form method="post" action="{{ route('planner.generate') }}" class="center">@csrf<input type="hidden" name="week" value="{{ $week->toDateString() }}"><button class="secondary">Fill this week with our usual meals</button></form>
 @endif
 
-<details class="panel" id="change-meal"><summary>Plan or change a meal</summary>
-<form method="post" action="{{ route('meals.store') }}">@csrf
-    <div class="form-grid">
-        <label>Day<input type="date" name="date" value="{{ ($week <= today() && today() <= $week->addDays(6)) ? today()->toDateString() : $week->toDateString() }}" required></label>
-        <label>Meal<select name="slot"><option value="late_dinner">Adult dinner</option><option value="early_dinner">Earlier dinner</option><option value="lunch">Lunch</option><option value="packed_lunch">Packed lunch</option></select></label>
-        <label>For<select name="audience"><option>Adults</option><option>Noah</option><option>You</option><option>Everyone</option></select></label>
-        <label>Servings<input type="number" name="servings" value="2" min="1" max="20" required></label>
-        <label class="full">What<select name="recipe_id">@foreach($recipes as $recipe)<option value="{{ $recipe->id }}">{{ $recipe->name }}</option>@endforeach</select></label>
-    </div>
-    <button>Save meal</button>
-</form>
-<p class="hint">Meal ingredients you don't have show up on the <a href="{{ route('shopping',['week'=>$week->toDateString()]) }}">shopping list</a>. <a href="{{ route('recipes') }}">Edit recipes</a></p>
-</details>
+
 @endsection

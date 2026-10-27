@@ -180,17 +180,15 @@ class DailyKitchenController extends Controller
     {
         $h = $this->household($r);
         $week = $this->week($r);
-<<<<<<< Updated upstream
-        return view('shopping-simple', compact('h', 'week') + $shopping->forWeek($h, $week) + ['suggestions' => $this->suggestions($h), 'current' => $week->equalTo($h->currentWeek()),
-            'places' => $h->inventory()->with('location')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => $i->location->type])->all(),
-            'picked' => $h->inventory()->whereNotNull('shelf')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => FoodDictionary::sectionForShelf($i->shelf)])->all()]);
-=======
         $ingredientImports = DB::table('meal_ingredient_imports')->where('household_id', $h->id)->where('week', $week->toDateString())->orderByDesc('id')->get()->map(function ($import) {
             $import->exchange = json_decode($import->payload, true, 32, JSON_THROW_ON_ERROR);
+
             return $import;
         });
-        return view('shopping-simple', compact('h', 'week', 'ingredientImports') + $shopping->forWeek($h, $week));
->>>>>>> Stashed changes
+
+        return view('shopping-simple', compact('h', 'week', 'ingredientImports') + $shopping->forWeek($h, $week) + ['suggestions' => $this->suggestions($h), 'current' => $week->equalTo($h->currentWeek()),
+            'places' => $h->inventory()->with('location')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => $i->location->type])->all(),
+            'picked' => $h->inventory()->whereNotNull('shelf')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => FoodDictionary::sectionForShelf($i->shelf)])->all()]);
     }
 
     public function check(Request $r)

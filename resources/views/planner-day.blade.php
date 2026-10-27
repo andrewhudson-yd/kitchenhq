@@ -5,6 +5,7 @@
         <span class="meal-slot">{{ str_contains($meal->slot,'lunch') ? 'Lunch' : 'Dinner' }}</span>
         <strong>{{ $meal->recipe->name }}</strong>
         <span class="meal-for">{{ $meal->audience }}</span>
+        @unless($meal->cooked_at)<form method="post" action="{{ route('meals.destroy',$meal->id) }}">@csrf @method('delete')<button class="icon-button meal-delete" aria-label="Delete {{ $meal->recipe->name }} on {{ $date->format('l') }}">@include('ui-icon',['name'=>'x'])</button></form>@endunless
     </div>
     @empty
     <p class="muted">Nothing planned.</p>
