@@ -29,7 +29,7 @@ class ShoppingPhotoController extends Controller
     {
         $h = $this->household($r);
         $r->validate(['week' => 'nullable|date_format:Y-m-d']);
-        return view('shopping-photo', ['week' => $r->input('week', $h->plan_starts_on ?? today()->startOfWeek()->toDateString()), 'connected' => (bool) OpenAiConnection::key(), 'model' => OpenAiConnection::model(), 'purpose' => $r->input('purpose') === 'receipt' ? 'receipt' : 'list']);
+        return view('shopping-photo', ['week' => $r->input('week', $h->currentWeek()->toDateString()), 'connected' => (bool) OpenAiConnection::key(), 'model' => OpenAiConnection::model(), 'purpose' => $r->input('purpose') === 'receipt' ? 'receipt' : 'list']);
     }
 
     public function connection(Request $r)

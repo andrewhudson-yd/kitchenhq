@@ -19,13 +19,19 @@ class Household extends Model
     /** The start of the planning week that contains today, following the household's weekly rhythm. */
     public function currentWeek(): CarbonImmutable
     {
-        $today = CarbonImmutable::today();
+        return $this->weekOf(CarbonImmutable::today());
+    }
+
+    /** The start of the planning week that contains a given day. */
+    public function weekOf(CarbonImmutable $day): CarbonImmutable
+    {
+        $day = $day->startOfDay();
         if (! $this->plan_starts_on) {
-            return $today->startOfWeek();
+            return $day->startOfWeek();
         }
         $start = CarbonImmutable::parse($this->plan_starts_on);
 
-        return $start->addDays(intdiv((int) $start->diffInDays($today, false) - ($today < $start ? 6 : 0), 7) * 7);
+        return $start->addDays(intdiv((int) $start->diffInDays($day, false) - ($day < $start ? 6 : 0), 7) * 7);
     }
 
     /** Link parameters for a week's page: none for the current week, so the address stays the same. */

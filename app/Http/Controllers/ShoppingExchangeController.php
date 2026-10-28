@@ -17,7 +17,7 @@ class ShoppingExchangeController extends Controller
     {
         $request->validate(['week' => 'nullable|date_format:Y-m-d']);
 
-        return view('shopping-exchange', ['week' => $request->input('week', $request->user()->household->plan_starts_on ?? today()->startOfWeek()->toDateString())]);
+        return view('shopping-exchange', ['week' => $request->input('week', $request->user()->household->currentWeek()->toDateString())]);
     }
 
     public function example(string $format)

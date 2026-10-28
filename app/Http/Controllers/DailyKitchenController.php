@@ -182,8 +182,13 @@ class DailyKitchenController extends Controller
         $week = $this->week($r);
         $ingredientImports = DB::table('meal_ingredient_imports')->where('household_id', $h->id)->where('week', $week->toDateString())->orderByDesc('id')->get()->map(function ($import) {
             $import->exchange = json_decode($import->payload, true, 32, JSON_THROW_ON_ERROR);
+
             return $import;
         });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8b544dc86c7e429ee198af30b4b5688a8b9e70fb
         return view('shopping-simple', compact('h', 'week', 'ingredientImports') + $shopping->forWeek($h, $week) + ['suggestions' => $this->suggestions($h), 'current' => $week->equalTo($h->currentWeek()),
             'places' => $h->inventory()->with('location')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => $i->location->type])->all(),
             'picked' => $h->inventory()->whereNotNull('shelf')->get()->mapWithKeys(fn ($i) => [SimpleStock::key($i->name) => FoodDictionary::sectionForShelf($i->shelf)])->all()]);

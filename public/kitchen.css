@@ -60,6 +60,8 @@ img { max-width: 100%; }
 .sr-only, .skip:not(:focus) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip:focus { position: fixed; top: 8px; left: 8px; z-index: 50; background: var(--surface); padding: 8px 12px; border-radius: 8px; }
 :focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); outline-offset: 2px; }
+/* Headings get focus after a page change so screen readers announce them; they aren't controls, so no ring. */
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; }
 .ui-icon { flex: none; }
 
 /* Buttons */
@@ -418,6 +420,7 @@ summary.qty-pill::-webkit-details-marker { display: none; }
 .idea-replaces { color: var(--low) !important; font-weight: 600; margin-top: 6px !important; }
 .idea-shop { margin: 14px 4px 16px; }
 
+<<<<<<< HEAD
 /* Kitchen HQ crisp finish */
 :root{--bg:#f4f6f3;--surface:#fff;--ink:#1d3029;--muted:#65746c;--line:#dde5df;--soft:#edf2ee;--brand:#285f49;--brand-soft:#e8f1eb;--radius:15px;--shadow:0 1px 3px #17362605,0 6px 20px #17362603;--nav-h:72px}
 html{scroll-padding-top:24px}
@@ -505,3 +508,39 @@ input[type=checkbox],input[type=radio]{box-shadow:none}label{font-size:12px;font
 
 /* Balanced desktop shelves */
 @media(min-width:1024px){.kitchen-shelves{display:block;columns:2;column-gap:18px}.kitchen-shelves>.list{break-inside:avoid;margin:0 0 18px}.kitchen-shelves>.list:only-child{column-span:all}}
+=======
+/* Meal ingredient exchange (CSV / JSON import) */
+.exchange-recipe { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--line); }
+.exchange-recipe:first-child { padding-top: 0; margin-top: 0; border-top: 0; }
+.exchange-row { padding: 13px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+.exchange-row p { margin: 7px 0 0; }
+.exchange-row-title { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.exchange-row-title strong { font-size: 15px; }
+.exchange-note { white-space: pre-wrap; }
+.exchange-batch { margin-top: 18px; }
+.exchange-batch > summary { overflow-wrap: anywhere; }
+.table-wrap { overflow-x: auto; }
+.table-wrap table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table-wrap th, .table-wrap td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+@media (max-width: 760px) { .exchange-row-title { display: block; } .exchange-row-title .pill { margin-top: 7px; } }
+
+/* Meals: AI ideas / add a meal tabs, delete buttons */
+.plan-box { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; }
+.plan-box .plan-ai { box-shadow: none; margin: 0; border-radius: 0; }
+.plan-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin: 12px 12px 0; background: var(--soft); border-radius: 12px; }
+.plan-tabs label { margin: 0; }
+.plan-tabs input { position: absolute; opacity: 0; pointer-events: none; }
+.plan-tabs span { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; border-radius: 9px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.plan-tabs span .ui-icon { width: 18px; height: 18px; }
+.plan-tabs input:checked + span { background: var(--surface); color: var(--brand); box-shadow: var(--shadow); }
+.plan-tabs input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); }
+.plan-panel-add { display: none; padding: 14px 16px; }
+.plan-box:has(input[value=add]:checked) .plan-panel-ai { display: none; }
+.plan-box:has(input[value=add]:checked) .plan-panel-add { display: block; }
+.plan-panel-add .add-meal > button { width: 100%; min-height: 48px; }
+.plan-panel-add .hint { margin: 10px 0 0; font-size: 13px; }
+.meal-row { grid-template-columns: 58px 1fr auto auto; }
+.meal-row form { margin: 0; }
+.meal-delete { width: 32px; min-height: 32px; margin: -6px -8px -6px 0; }
+.meal-delete .ui-icon { width: 18px; height: 18px; }
+>>>>>>> 8b544dc86c7e429ee198af30b4b5688a8b9e70fb
