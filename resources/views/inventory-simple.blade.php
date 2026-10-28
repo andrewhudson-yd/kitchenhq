@@ -2,7 +2,9 @@
 @section('title','Kitchen')
 @section('content')
 @php($places = \App\Support\FoodDictionary::PLACES)
-<h1 class="page-title">Kitchen</h1>
+<p class="page-kicker">Good food, in good order</p>
+<div class="page-head"><h1 class="page-title">Kitchen</h1><span class="count">{{ collect($counts)->sum() }} on hand</span></div>
+<p class="page-subtitle">A clear view of what you have, and what needs topping up.</p>
 
 <div class="add-bar">
 <form class="quick-add" method="post" action="{{ route('stock.add') }}" data-keep-focus autocomplete="off">@csrf
@@ -30,6 +32,7 @@
     @endforeach
 </div>
 
+<div class="kitchen-shelves">
 @php($shelves = $items->groupBy(fn ($item) => \App\Support\FoodDictionary::shelfFor($item))->sortBy(fn ($rows, $shelf) => array_search($shelf, \App\Support\FoodDictionary::SHELVES)))
 @forelse($shelves as $shelf => $shelfItems)
 <section class="list" aria-labelledby="shelf-{{ \Illuminate\Support\Str::slug($shelf) }}">
@@ -64,6 +67,7 @@
 <div class="empty"><p><strong>Nothing in the {{ strtolower($places[$place]) }} yet.</strong></p><p class="muted">Type above to add what you have.</p></div>
 </section>
 @endforelse
+</div>
 <p class="footnote">Swipe right or tap <strong>We're out</strong> to move it to your <a href="{{ route('shopping') }}">shopping list</a>. Swipe left to remove.</p>
 @include('food-suggestions')
 @endsection

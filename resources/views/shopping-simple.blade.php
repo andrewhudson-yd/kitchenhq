@@ -13,7 +13,7 @@ $reason = fn ($row) => match (true) {
     default => count($row['uses']) && $row['uses'][0] !== 'Stock replenishment' ? 'For '.collect($row['uses'])->take(2)->implode(', ') : null,
 };
 @endphp
-<<<<<<< Updated upstream
+<p class="page-kicker">A little less waste</p>
 <div class="page-head">
     <h1 class="page-title">Shopping list</h1>
     <span class="count">{{ $toBuy->count() }} to get</span>
@@ -38,6 +38,7 @@ $reason = fn ($row) => match (true) {
 @if(session('shopping_got'))<form method="post" action="{{ route('shopping.got') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_got.week') }}"><input type="hidden" name="name" value="{{ session('shopping_got.name') }}"><input type="hidden" name="got" value="0"><span>{{ ucfirst(session('shopping_got.name')) }} is back in the kitchen.</span><button class="link">Undo</button></form>@endif
 @if(session('shopping_removed'))<form method="post" action="{{ route('shopping.remove') }}" class="undo">@csrf<input type="hidden" name="week" value="{{ session('shopping_removed.week') }}"><input type="hidden" name="item_key" value="{{ session('shopping_removed.item_key') }}"><input type="hidden" name="removed" value="0"><span>Item removed.</span><button class="link">Undo</button></form>@endif
 
+<div class="shopping-sections">
 @php($sections = $toBuy->groupBy(fn ($row) => $picked[\App\Services\SimpleStock::key($row['name'])] ?? \App\Support\FoodDictionary::section($row['name'], $places[\App\Services\SimpleStock::key($row['name'])] ?? null))->sortBy(fn ($rows, $section) => array_search($section, \App\Support\FoodDictionary::SECTIONS)))
 @forelse($sections as $section => $rows)
 <section class="list" aria-labelledby="section-{{ \Illuminate\Support\Str::slug($section) }}">
@@ -47,19 +48,9 @@ $reason = fn ($row) => match (true) {
 @empty
 <section class="list"><div class="empty"><p><strong>All done.</strong></p><p class="muted">When you run out of something in the kitchen, it lands here.</p></div></section>
 @endforelse
+</div>
 
-<p class="footnote"><a href="{{ route('shopping.photo',['week'=>$week->toDateString()]) }}">Add from a photo of a list</a> · <a href="{{ route('shopping.photo',['week'=>$week->toDateString(),'purpose'=>'receipt']) }}">Scan a receipt</a></p>
+<p class="footnote"><a href="{{ route('shopping.exchange',['week'=>$week->toDateString()]) }}">Import CSV / JSON</a> · <a href="{{ route('shopping.photo',['week'=>$week->toDateString()]) }}">Add from a photo of a list</a> · <a href="{{ route('shopping.photo',['week'=>$week->toDateString(),'purpose'=>'receipt']) }}">Scan a receipt</a></p>
+@include('shopping-exchange-saved')
 @include('food-suggestions')
 @endsection
-=======
-<div class="section-head"><h1>Shopping</h1><div class="actions"><a class="text-action" href="{{ route('shopping.exchange',['week'=>$week->toDateString()]) }}">Import CSV / JSON</a><a class="text-action" href="{{ route('shopping.photo',['week'=>$week->toDateString()]) }}">+ Add list</a></div></div>
-@include('weekbar',['page'=>'shopping'])
-<a class="button finish-shopping" href="{{ route('shopping.photo',['week'=>$week->toDateString(),'purpose'=>'receipt']) }}">Finish shopping · Upload receipt</a>
-@if(session('shopping_removed'))<form method="post" action="{{ route('shopping.remove') }}" class="undo-removal">@csrf<input type="hidden" name="week" value="{{ session('shopping_removed.week') }}"><input type="hidden" name="item_key" value="{{ session('shopping_removed.item_key') }}"><input type="hidden" name="removed" value="0"><button class="small secondary">Undo removal</button></form>@endif
-<section class="card"><h2>To get <small>{{ $pending->count() }}</small></h2>@forelse($pending as $row)@include('shopping-row',['mode'=>'pending'])@empty<p class="muted">Everything is picked up.</p>@endforelse</section>
-<details class="card" id="in-my-trolley"><summary>In my trolley <span class="pill">{{ $trolley->count() }}</span></summary>@forelse($trolley as $row)@include('shopping-row',['mode'=>'trolley'])@empty<p class="hint">Tap Got it as you shop.</p>@endforelse
-@if($trolley->count())<form method="post" action="{{ route('purchases.prepare') }}">@csrf<input type="hidden" name="week" value="{{ $week->toDateString() }}"><button class="small secondary">Put away without a receipt</button></form>@endif</details>
-@if($have->count())<details class="card" id="already-in-stock"><summary>Already in stock <span class="pill">{{ $have->count() }}</span></summary>@foreach($have as $row)@include('shopping-row',['mode'=>'have'])@endforeach</details>@endif
-@include('shopping-exchange-saved')
-@endsection
->>>>>>> Stashed changes

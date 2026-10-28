@@ -1,6 +1,7 @@
 @extends('layout')
 @section('title','Meals')
 @section('content')
+<p class="page-kicker">Make room for the week</p>
 <div class="page-head">
     <h1 class="page-title">Meals</h1>
     @include('weekbar',['page'=>'planner'])
@@ -16,6 +17,7 @@
     <p class="hint">Uses everything in your kitchen and your family's likes and dislikes.</p>
 </form>
 
+<div class="plan-days">
 @php($days = collect(range(0,6))->map(fn($d)=>$week->addDays($d)))
 @php($past = $days->filter(fn($d)=>$d->lt(today())))
 @php($dayMeals = fn($date) => $meals->filter(fn($m)=>$m->date->toDateString()===$date->toDateString())->sortBy(fn($m)=>str_contains($m->slot,'lunch') ? 0 : 1))
@@ -27,6 +29,8 @@
 @else
 @foreach($days as $date)@include('planner-day')@endforeach
 @endif
+
+</div>
 
 @if(!$meals->count())
 <form method="post" action="{{ route('planner.generate') }}" class="center">@csrf<input type="hidden" name="week" value="{{ $week->toDateString() }}"><button class="secondary">Fill this week with our usual meals</button></form>
