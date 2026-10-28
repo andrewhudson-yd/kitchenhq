@@ -8,6 +8,9 @@
 <link rel="icon" href="{{ asset('brand/kitchen-mark.svg') }}" type="image/svg+xml">
 <link rel="stylesheet" href="{{ asset('kitchen.css').'?v=crisp-20261028-merge1' }}">
 <script src="{{ asset('kitchen.js').'?v=crisp-20261028-merge1' }}" defer></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@auth<meta name="khq-user" content="{{ auth()->id() }}">@endauth
+<script src="{{ asset('app-bridge.js').'?v=1' }}" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -18,7 +21,7 @@
 @auth
 <nav class="tabs-main" aria-label="Main navigation">
     @foreach(['inventory'=>'Kitchen','shopping'=>'Shopping','planner'=>'Meals','settings'=>'Settings'] as $route=>$label)
-    <a class="{{ request()->routeIs($route) ? 'active' : '' }}" href="{{ route($route) }}" @if(request()->routeIs($route)) aria-current="page" @endif>@include('ui-icon',['name'=>$route])<span>{{ $label }}</span></a>
+    <a class="{{ request()->routeIs($route) ? 'active' : '' }}" href="{{ route($route) }}" @if(request()->routeIs($route)) aria-current="page" @endif @if($route === 'shopping') data-native-href="/app/shopping/index.html" @endif>@include('ui-icon',['name'=>$route])<span>{{ $label }}</span></a>
     @endforeach
 </nav>
 @endauth

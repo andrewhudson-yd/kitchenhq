@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppShoppingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ShoppingExchangeController;
 use App\Http\Controllers\PurchaseController;
@@ -82,4 +83,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/profiles', [KitchenController::class, 'saveProfile'])->name('profiles.store');
     Route::put('/profiles/{id}', [KitchenController::class, 'saveProfile'])->whereNumber('id')->name('profiles.update');
     Route::post('/invite', [KitchenController::class, 'invite'])->middleware('throttle:5,1')->name('invite');
+    // Phone app: a device token for the offline screens, created while signed in here.
+    Route::post('/app/token', [AppShoppingController::class, 'token'])->middleware('throttle:10,1')->name('app.token');
 });

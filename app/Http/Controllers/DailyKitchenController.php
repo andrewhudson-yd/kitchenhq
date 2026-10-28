@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\DailyShopping;
+use App\Services\ShoppingActions;
 use App\Services\SimpleStock;
 use App\Services\OpenAiConnection;
 use App\Models\StockMovement;
@@ -68,20 +69,12 @@ class DailyKitchenController extends Controller
 
     private function locationFor($h, string $place): int
     {
-        return ($h->locations()->where('type', $place)->orderBy('id')->first()
-            ?? $h->locations()->create(['name' => FoodDictionary::PLACES[$place], 'type' => $place]))->id;
+        return app(ShoppingActions::class)->locationFor($h, $place);
     }
 
     private function restock($h, string $name, string $level = 'plenty', ?string $place = null): void
     {
-        $key = SimpleStock::key($name);
-        $item = $h->inventory()->lockForUpdate()->get()->first(fn ($i) => SimpleStock::key($i->name) === $key);
-        $location = $place ? $this->locationFor($h, $place) : null;
-        if ($item) {
-            $item->update(['qualitative_stock' => $level, 'quantity' => $level === 'out' ? 0 : null] + ($location ? ['storage_location_id' => $location] : []));
-        } else {
-            $h->inventory()->create(['name' => trim($name), 'storage_location_id' => $location ?? $this->locationFor($h, FoodDictionary::placeFor($name)), 'qualitative_stock' => $level, 'quantity' => $level === 'out' ? 0 : null, 'unit' => 'each']);
-        }
+        app(ShoppingActions::class)->restock($h, $name, $level, $place);
     }
 
     public function stock(Request $r, int $id)
@@ -194,7 +187,7 @@ class DailyKitchenController extends Controller
     public function check(Request $r)
     {
         $data = $r->validate(['week' => 'required|date_format:Y-m-d', 'item_key' => 'required|regex:/^[a-f0-9]{64}$/', 'checked' => 'required|boolean']);
-        DB::table('shopping_checks')->updateOrInsert(['household_id' => $this->household($r)->id, 'week' => $data['week'], 'item_key' => $data['item_key']], ['checked' => $data['checked']]);
+        app(ShoppingActions::class)->check($this->household($r), $data['week'], $data['item_key'], (bool) $data['checked']);
         return back()->with('status', 'Shopping list saved.');
     }
 
@@ -203,11 +196,7 @@ class DailyKitchenController extends Controller
         $r->merge(['name' => $r->input('name', $r->input('food'))]);
         $h = $this->household($r);
         $r->validate(['name' => 'required|string|max:150']);
-        [$name, $quantity] = ShoppingQuantity::parse($r->input('name'));
-        $week = $h->currentWeek()->toDateString();
-        $key = hash('sha256', SimpleStock::key($name));
-        DB::table('shopping_extras')->updateOrInsert(['household_id' => $h->id, 'week' => $week, 'item_key' => $key], ['name' => $name, 'source' => 'manual', 'created_at' => now(), 'updated_at' => now()]);
-        DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $week, 'item_key' => $key], ['checked' => false, 'removed' => false, 'stocked_at' => null] + ($quantity ? ['quantity' => $quantity] : []));
+        [$name, $quantity] = app(ShoppingActions::class)->add($h, $r->input('name'));
 
         return redirect()->route('shopping')->with('status', ($quantity ? $quantity.' ' : '').ucfirst($name).' added to the list.');
     }
@@ -216,11 +205,7 @@ class DailyKitchenController extends Controller
     {
         $h = $this->household($r);
         $data = $r->validate(['week' => 'required|date_format:Y-m-d', 'item_key' => 'required|regex:/^[a-f0-9]{64}$/', 'quantity' => 'nullable|string|max:30', 'step' => 'nullable|integer|in:-1,1']);
-        $where = ['household_id' => $h->id, 'week' => $data['week'], 'item_key' => $data['item_key']];
-        $quantity = isset($data['step'])
-            ? ShoppingQuantity::step(ShoppingQuantity::clean($r->has('quantity') ? $data['quantity'] : DB::table('shopping_checks')->where($where)->value('quantity')), (int) $data['step'])
-            : ShoppingQuantity::clean($data['quantity'] ?? null);
-        DB::table('shopping_checks')->updateOrInsert($where, ['quantity' => $quantity]);
+        $quantity = app(ShoppingActions::class)->quantity($h, $data['week'], $data['item_key'], $data['quantity'] ?? null, isset($data['step']) ? (int) $data['step'] : null, $r->has('quantity'));
 
         return redirect()->route('shopping', $h->weekParams($data['week']))->with('status', $quantity ? 'Quantity set to '.$quantity.'.' : 'Quantity cleared.');
     }
@@ -230,13 +215,7 @@ class DailyKitchenController extends Controller
     {
         $h = $this->household($r);
         $data = $r->validate(['week' => 'required|date_format:Y-m-d', 'name' => 'required|string|max:150', 'got' => 'required|boolean']);
-        $key = hash('sha256', SimpleStock::key($data['name']));
-        DB::transaction(function () use ($h, $data, $key) {
-            if (! str_starts_with($data['name'], 'SimplyCook kit: ')) {
-                $this->restock($h, $data['name'], $data['got'] ? 'plenty' : 'out');
-            }
-            DB::table('shopping_checks')->updateOrInsert(['household_id' => $h->id, 'week' => $data['week'], 'item_key' => $key], ['checked' => (bool) $data['got'], 'removed' => false, 'stocked_at' => $data['got'] ? now() : null]);
-        });
+        app(ShoppingActions::class)->got($h, $data['week'], $data['name'], (bool) $data['got']);
 
         $response = redirect()->route('shopping', $h->weekParams($data['week']))->with('status', $data['got'] ? ucfirst($data['name']).' is back in the kitchen.' : ucfirst($data['name']).' is back on the list.');
 

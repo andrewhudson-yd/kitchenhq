@@ -61,6 +61,8 @@ class AuthController extends Controller
 
     public function logout(Request $r)
     {
+        // Signing out also signs the phone app's offline screens out.
+        DB::table('app_tokens')->where('user_id', $r->user()->id)->delete();
         Auth::logout();
         $r->session()->invalidate();
         $r->session()->regenerateToken();
