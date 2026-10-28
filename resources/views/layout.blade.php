@@ -5,14 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#285f49">
 <title>@yield('title', 'Kitchen HQ') · Kitchen HQ</title>
-<<<<<<< HEAD
 <link rel="icon" href="{{ asset('brand/kitchen-mark.svg') }}" type="image/svg+xml">
-<link rel="stylesheet" href="{{ asset('kitchen.css').'?v=crisp-20261028' }}">
-<script src="{{ asset('kitchen.js').'?v=crisp-20261028' }}" defer></script>
-=======
-<link rel="stylesheet" href="{{ asset('kitchen.css').'?v=fresh17' }}">
-<script src="{{ asset('kitchen.js').'?v=fresh17' }}" defer></script>
->>>>>>> 8b544dc86c7e429ee198af30b4b5688a8b9e70fb
+<link rel="stylesheet" href="{{ asset('kitchen.css').'?v=crisp-20261028-merge1' }}">
+<script src="{{ asset('kitchen.js').'?v=crisp-20261028-merge1' }}" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>

@@ -13,10 +13,7 @@ $reason = fn ($row) => match (true) {
     default => count($row['uses']) && $row['uses'][0] !== 'Stock replenishment' ? 'For '.collect($row['uses'])->take(2)->implode(', ') : null,
 };
 @endphp
-<<<<<<< HEAD
 <p class="page-kicker">A little less waste</p>
-=======
->>>>>>> 8b544dc86c7e429ee198af30b4b5688a8b9e70fb
 <div class="page-head">
     <h1 class="page-title">Shopping list</h1>
     <span class="count">{{ $toBuy->count() }} to get</span>
@@ -53,13 +50,7 @@ $reason = fn ($row) => match (true) {
 @endforelse
 </div>
 
-<<<<<<< HEAD
 <p class="footnote"><a href="{{ route('shopping.exchange',['week'=>$week->toDateString()]) }}">Import CSV / JSON</a> · <a href="{{ route('shopping.photo',['week'=>$week->toDateString()]) }}">Add from a photo of a list</a> · <a href="{{ route('shopping.photo',['week'=>$week->toDateString(),'purpose'=>'receipt']) }}">Scan a receipt</a></p>
 @include('shopping-exchange-saved')
-=======
-@include('shopping-exchange-saved')
-
-<p class="footnote"><a href="{{ route('shopping.photo',['week'=>$week->toDateString()]) }}">Add from a photo of a list</a> · <a href="{{ route('shopping.photo',['week'=>$week->toDateString(),'purpose'=>'receipt']) }}">Scan a receipt</a> · <a href="{{ route('shopping.exchange',['week'=>$week->toDateString()]) }}">Import CSV / JSON</a></p>
->>>>>>> 8b544dc86c7e429ee198af30b4b5688a8b9e70fb
 @include('food-suggestions')
 @endsection
